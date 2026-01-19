@@ -1,9 +1,9 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight, ChevronRight, Menu, X } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import { AnimatedGroup } from '@/components/ui/animated-group'
 import { cn } from '@/lib/utils'
+import staytelogo from '@/assets/stayte_logo.png'
 
 const transitionVariants = {
     item: {
@@ -305,7 +305,7 @@ const HeroHeader = () => {
                                 to="/"
                                 aria-label="home"
                                 className="flex items-center space-x-2">
-                                <Logo />
+                                <img src={staytelogo} alt="Stayte" className="h-6 object-contain" />
                             </Link>
 
                             <button
