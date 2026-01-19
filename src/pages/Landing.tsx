@@ -81,7 +81,7 @@ export function Landing() {
                                     <Link
                                         to="/#link"
                                         className="hover:bg-background dark:hover:border-t-border bg-muted group mx-auto flex w-fit items-center gap-4 rounded-full border p-1 pl-4 shadow-md shadow-black/5 transition-all duration-300 dark:border-t-white/5 dark:shadow-zinc-950">
-                                        <span className="text-foreground text-sm">Introducing The New Pilot Agent</span>
+                                        <span className="text-foreground text-sm">Coming Soon</span>
                                         <span className="dark:border-background block h-4 w-0.5 border-l bg-white dark:bg-zinc-700"></span>
 
                                         <div className="bg-background group-hover:bg-muted size-6 overflow-hidden rounded-full duration-500">
@@ -138,7 +138,7 @@ export function Landing() {
                                         variant="ghost"
                                         className="h-10.5 rounded-xl px-5">
                                         <Link to="/#link">
-                                            <span className="text-nowrap">Request a demo</span>
+                                            <span className="text-nowrap">Contact Sales</span>
                                         </Link>
                                     </Button>
                                 </AnimatedGroup>
@@ -165,14 +165,14 @@ export function Landing() {
                                 <div className="inset-shadow-2xs ring-background dark:inset-shadow-white/20 bg-background relative mx-auto max-w-6xl overflow-hidden rounded-2xl border p-4 shadow-lg shadow-zinc-950/15 ring-1">
                                     <img
                                         className="bg-background aspect-15/8 relative hidden rounded-2xl dark:block object-cover"
-                                        src="https://tailark.com//_next/image?url=%2Fmail2.png&w=3840&q=75"
+                                        src="https://unldijoaajihjorczhwc.supabase.co/storage/v1/object/public/images/hero%20styte.png"
                                         alt="app screen"
                                         width="2700"
                                         height="1440"
                                     />
                                     <img
                                         className="z-2 border-border/25 aspect-15/8 relative rounded-2xl border dark:hidden object-cover"
-                                        src="https://tailark.com/_next/image?url=%2Fmail2-light.png&w=3840&q=75"
+                                        src="https://unldijoaajihjorczhwc.supabase.co/storage/v1/object/public/images/hero%20styte.png"
                                         alt="app screen"
                                         width="2700"
                                         height="1440"
