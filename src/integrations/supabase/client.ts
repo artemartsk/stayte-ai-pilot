@@ -2,8 +2,17 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
-const SUPABASE_URL = import.meta.env.NEXT_PUBLIC_SUPABASE_URL || import.meta.env.SUPABASE_URL;
-const SUPABASE_PUBLISHABLE_KEY = import.meta.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || import.meta.env.SUPABASE_ANON_KEY;
+// Fallback values for development/debugging
+const FALLBACK_URL = "https://unldijoaajihjorczhwc.supabase.co";
+const FALLBACK_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVubGRpam9hYWppaGpvcmN6aHdjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA5NzU0NDYsImV4cCI6MjA3NjU1MTQ0Nn0.VONyUUgkccxm5Gd9CHWu3DPTd3KrUBSaa8khZszrNek";
+
+const SUPABASE_URL = import.meta.env.NEXT_PUBLIC_SUPABASE_URL || import.meta.env.SUPABASE_URL || FALLBACK_URL;
+const SUPABASE_PUBLISHABLE_KEY = import.meta.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || import.meta.env.SUPABASE_ANON_KEY || FALLBACK_KEY;
+
+// Debug: log which source is being used
+if (!import.meta.env.NEXT_PUBLIC_SUPABASE_URL && !import.meta.env.SUPABASE_URL) {
+  console.warn('[Supabase] Using fallback URL - env vars not found');
+}
 
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
