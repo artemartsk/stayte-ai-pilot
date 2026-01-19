@@ -127,7 +127,7 @@ export function Landing() {
                                             size="lg"
                                             className="rounded-xl px-5 text-base">
                                             <Link to="/login">
-                                                <span className="text-nowrap">Start Building</span>
+                                                <span className="text-nowrap">Book a Demo</span>
                                             </Link>
                                         </Button>
                                     </div>
