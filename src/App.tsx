@@ -16,6 +16,8 @@ import Deals from "./pages/Deals";
 import AITasks from "./pages/AITasks";
 import AgentsDashboard from "./pages/AgentsDashboard";
 import Integrations from "./pages/Integrations";
+import Login from "./pages/Login";
+import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -35,6 +37,7 @@ function App() {
             <Toaster />
             <Sonner />
             <Routes>
+              <Route path="/login" element={<Login />} />
               <Route element={<Layout />}>
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/contacts" element={<Contacts />} />
@@ -46,6 +49,7 @@ function App() {
                 <Route path="/agents" element={<AgentsDashboard />} />
                 <Route path="/integrations" element={<Integrations />} />
               </Route>
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </TooltipProvider>
         </AuthProvider>
