@@ -1,0 +1,375 @@
+id,type,name,nameResale,nameAI,description,latitude,longitude,annualRevenueIncreasePct,createdAt,updatedAt,parentId,picture,isFavorite
+3,municipality,Alhaurín de la Torre,Alhaurín de la Torre,Alhaurín de la Torre,,36.66034180,-4.55856720,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,2,,f
+4,area,Pinos de Alhaurín,,Alhaurín de la Torre,,36.64813800,-4.58565900,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,3,,f
+5,area,Manantiales - Lagar - Cortijo,,Alhaurín de la Torre,,36.66020700,-4.53403800,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,3,,f
+6,area,Centro,,Alhaurín de la Torre,,36.66034180,-4.55856720,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,3,,f
+7,area,El Romeral-Peñón de Zapata,,Alhaurín de la Torre,,36.68308430,-4.53588500,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,3,,f
+8,area,Capellanía - Retamar,,Alhaurín de la Torre,,36.66598220,-4.55028030,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,3,,f
+9,area,Alquería-Torrealquería,,Alhaurín de la Torre,,36.68931050,-4.59985170,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,3,,f
+10,area,Jardines de Alhaurín-Huerta Alta-Fuensanguínea,,Alhaurín de la Torre,,36.66031410,-4.55869650,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,3,,f
+11,area,Buenavista-Lauro Golf,Lauro Golf,Alhaurín de la Torre,,36.65132900,-4.63077690,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,3,,f
+12,area,Platero - El Limón,,Alhaurín de la Torre,,36.65930890,-4.56646280,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,3,,f
+13,municipality,Alhaurín el Grande,Alhaurín el Grande,Alhaurín el Grande,,36.64282980,-4.68767070,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,2,,f
+14,area,Centro,,Alhaurín el Grande,,36.64372130,-4.68539330,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,13,,f
+15,area,El Cigarral - Dehesa - Borrajo,,Alhaurín el Grande,,36.64508200,-4.69803200,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,13,,f
+16,area,Ardelejos - Cuesta de la Palma - Buenavista,,Alhaurín el Grande,,36.65132980,-4.66566870,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,13,,f
+17,area,Las Lomas - Las Torres - Terrazas de Alhaurín,,Alhaurín el Grande,,36.62855270,-4.73019830,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,13,,f
+18,area,Alhaurín Golf,Alhaurin Golf,Alhaurín el Grande,,36.60857000,-4.70446590,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,13,,f
+19,area,Villafranco del Guadalhorce,Villafranco del Guadalhorce,Alhaurín el Grande,,36.70154060,-4.69898390,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,13,,f
+20,municipality,Alora,Alora,Pinos de Alhaurín,,36.82496280,-4.70576870,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,2,,f
+21,area,Alora,Alora,Pinos de Alhaurín,,36.82496280,-4.70576870,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,20,,f
+22,municipality,Antequera,Antequera,Pinos de Alhaurín,,37.01716060,-4.56001360,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,2,,f
+23,area,Centro,,Pinos de Alhaurín,,37.01833100,-4.56117220,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,22,,f
+24,area,Bobadilla - Bobadilla Estación - La Joya,,Pinos de Alhaurín,,37.04171430,-4.69623420,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,22,,f
+25,area,Zona Cueva de Menga,,Pinos de Alhaurín,,37.02416720,-4.54826650,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,22,,f
+26,area,Zona de la Vega,,Pinos de Alhaurín,,37.01490860,-4.56049940,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,22,,f
+27,area,Zona Fuentemora,,Pinos de Alhaurín,,37.01981830,-4.57525160,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,22,,f
+28,area,Casco Histórico,,Pinos de Alhaurín,,37.01617870,-4.55805280,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,22,,f
+29,municipality,Arriate,Arriate,Pinos de Alhaurín,,36.79700850,-5.13864610,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,2,,f
+30,municipality,Benadalid,Benadalid,Pinos de Alhaurín,,36.60614400,-5.26877020,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,2,,f
+31,municipality,Benahavís,"La Quinta,Monte Halcones",Benahavís,,36.51238100,-4.99477310,6.59,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,2,,f
+32,area,La Quinta,"La Quinta,Monte Halcones",Benahavís,,36.51238100,-4.99477310,6.59,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,31,,f
+33,area,Benahavís,Benahavís,Benahavís,,36.52048910,-5.04555750,6.59,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,31,,f
+34,area,Los Flamingos,Los Flamingos,Benahavís,,36.47947070,-5.04908410,6.59,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,31,,f
+35,area,Los Arqueros-Puerto del Almendro,Los Arqueros,Benahavís,,36.51361690,-5.01527310,6.59,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,31,,f
+37,area,Montemayor-Marbella Club,,Benahavís,,36.49454000,-5.06980140,6.59,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,31,,f
+40,area,La Heredia,La Heredia,Benahavís,,36.52097610,-5.00568330,6.59,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,31,,f
+43,area,Torrequebrada,Torrequebrada,Benalmádena,,36.58136190,-4.54982900,5.77,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,42,,f
+44,neighbourhood,Cortijo Torrequebrada,,Benalmádena,,36.58772190,-4.53301590,5.77,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,43,,f
+45,neighbourhood,Zona Centro Comercial Torrequebrada,,Benalmádena,,36.58416080,-4.55470030,5.77,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,43,,f
+46,neighbourhood,Hacienda Torrequebrada,,Benalmádena,,36.58136190,-4.54982900,5.77,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,43,,f
+47,neighbourhood,Nueva Torrequebrada,,Benalmádena,,36.58416080,-4.55470030,5.77,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,43,,f
+48,area,Arroyo de la Miel,Arroyo de la Miel,Benalmádena,,36.59996610,-4.53949700,5.77,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,42,,f
+50,area,Solymar - Puerto Marina,,Benalmádena,,36.59934650,-4.51777700,5.77,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,42,,f
+51,neighbourhood,Solymar - Puerto Marina,,Benalmádena,,36.59934650,-4.51777700,5.77,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,50,,f
+52,area,Parque de la Paloma,,Benalmádena,,36.59253500,-4.52720400,5.77,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,42,,f
+54,neighbourhood,Los Nadales - Tio Charles,,Benalmádena,,36.58947660,-4.57439430,5.77,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,53,,f
+55,neighbourhood,Centro,,Benalmádena,,36.59647430,-4.51976880,5.77,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,53,,f
+56,neighbourhood,Rancho Domingo - La Hacienda,,Benalmádena,,36.59500740,-4.56337280,5.77,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,53,,f
+2,province,Málaga,Málaga,Alhaurín de la Torre,,36.66034180,-4.55856720,2.1,2025-05-29 17:15:49.118854,2025-06-02 11:35:57.120583,1,"",f
+36,area,El Paraíso,"El Paraiso,Benamara",El Paraíso,,36.46991170,-5.02994930,6.59,2025-05-29 17:15:49.118854,2025-06-03 10:46:17.010742,31,"",f
+42,municipality,Benalmádena,"Benalmádena,Benalmadena Costa,Benalmadena",Benalmádena,,36.58136190,-4.54982900,5.77,2025-05-29 17:15:49.118854,2025-06-04 08:53:58.349035,2,"",f
+53,area,Benalmádena Pueblo,"Benalmádena Pueblo,Benalmadena Pueblo",Benalmádena,,36.59865860,-4.57001430,5.77,2025-05-29 17:15:49.118854,2025-06-04 08:54:09.032782,42,"",f
+49,area,El Higueron - Capellanía,"La Capellanía,Torremar,La Capellania",Benalmádena,,36.58318010,-4.59139470,5.77,2025-05-29 17:15:49.118854,2025-06-04 08:54:53.290489,42,"",f
+57,neighbourhood,Casablanca - La Viñuela,,Benalmádena,,36.58866390,-4.56891740,5.77,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,53,,f
+59,area,Torremuelle,Torremuelle,Benalmádena,,36.57981400,-4.57037500,5.77,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,42,,f
+60,area,Santangelo,,Benalmádena,,36.61150380,-4.54385770,5.77,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,42,,f
+61,municipality,Cártama,Cártama,Cártama,,36.71214300,-4.63187680,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,2,,f
+62,area,Estación,Estacion de Cartama,Cártama,,36.73706250,-4.61057630,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,61,,f
+63,area,Cártama Pueblo,,Cártama,,36.71214300,-4.63187680,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,61,,f
+64,area,Diseminados,,Cártama,,36.71214300,-4.63187680,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,61,,f
+65,municipality,Casares,,Casares,,36.39007520,-5.21973790,8.48,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,2,,f
+66,area,Casares Golf - Casares del Sol,,Casares,,36.39007520,-5.21973790,8.48,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,65,,f
+67,area,Casares,"Casares,Casares Pueblo,Casares Playa",Casares,,36.44392730,-5.27301490,8.48,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,65,,f
+68,area,Bahía de Casares,,Casares,,36.38307790,-5.21427110,8.48,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,65,,f
+69,neighbourhood,Bahía de Casares,,Casares,,36.38307790,-5.21427110,8.48,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,68,,f
+72,area,Marina de Casares,,Casares,,36.37457880,-5.22340510,8.48,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,65,,f
+73,neighbourhood,Marina de Casares,,Casares,,36.37457880,-5.22340510,8.48,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,72,,f
+74,municipality,Coin,Coín,Pinos de Alhaurín,,36.66224210,-4.75700860,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,2,,f
+76,municipality,Estepona,Estepona,Estepona,,36.42563450,-5.15102610,8.21,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,2,,f
+77,area,Benamara - Atalaya,New Golden Mile,Estepona,,36.46606610,-5.02856510,8.21,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,76,,f
+78,neighbourhood,Paraiso-Barronal,Benavista,Estepona,,36.46991170,-5.02994930,8.21,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,77,,f
+79,neighbourhood,Nueva Atalaya,,Estepona,,36.47042440,-5.02049180,8.21,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,77,,f
+80,neighbourhood,Villacana - Costalita - Saladillo,Costalita,Estepona,,36.45624770,-5.05011070,8.21,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,77,,f
+81,neighbourhood,Cancelada,Cancelada,Estepona,,36.46147840,-5.05401380,8.21,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,77,,f
+83,neighbourhood,Casasola,,Estepona,,36.46334310,-5.00962120,8.21,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,77,,f
+84,neighbourhood,Benatalaya,Benatalaya,Estepona,,36.49026560,-5.01886750,8.21,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,77,,f
+86,area,Estepona Pueblo,,Estepona,,36.41597580,-5.15815780,8.21,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,76,,f
+87,neighbourhood,Puerto de Estepona,,Estepona,,36.41597580,-5.15815780,8.21,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,86,,f
+88,neighbourhood,Parque Central,,Estepona,,36.42611470,-5.15135210,8.21,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,86,,f
+89,neighbourhood,Huerta Nueva,,Estepona,,36.42294740,-5.15373880,8.21,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,86,,f
+90,neighbourhood,Sierra de Estepona-Avda de Andalucia,,Estepona,,36.42624330,-5.14756950,8.21,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,86,,f
+91,neighbourhood,Centro,,Estepona,,36.42580700,-5.14274100,8.21,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,86,,f
+92,neighbourhood,Zona Calvario,,Estepona,,36.42974060,-5.15041460,8.21,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,86,,f
+94,neighbourhood,La Concha-Resina Golf,,Estepona,,36.46494940,-5.07523640,8.21,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,93,,f
+95,neighbourhood,Guadalmansa,,Estepona,,36.45165040,-5.06312190,8.21,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,93,,f
+96,neighbourhood,El Velerín,,Estepona,,36.44656450,-5.09287020,8.21,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,93,,f
+97,neighbourhood,Las Lomas,"las lomas,El Padron",Estepona,,36.44656450,-5.09287020,8.21,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,93,,f
+98,neighbourhood,Sotoserena,,Estepona,,36.45773030,-5.06897070,8.21,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,93,,f
+99,area,Costa Natura,,Estepona,,36.41504560,-5.17778900,8.21,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,76,,f
+100,neighbourhood,Guadalobón,,Estepona,,36.41504560,-5.17778900,8.21,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,99,,f
+101,neighbourhood,Valle Romano Golf,Valle Romano,Estepona,,36.43127120,-5.19504250,8.21,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,99,,f
+102,area,Playa Bahía Dorada,,Estepona,,36.39292530,-5.20513860,8.21,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,76,,f
+103,neighbourhood,Buenas Noches,,Estepona,,36.39292530,-5.20513860,8.21,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,102,,f
+104,neighbourhood,Bahía Dorada,,Estepona,,36.39638920,-5.19629290,8.21,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,102,,f
+105,neighbourhood,Estepona Golf,,Estepona,,36.40957490,-5.21107080,8.21,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,102,,f
+106,area,Punta Plata,,Estepona,,36.43604970,-5.10790140,8.21,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,76,,f
+107,neighbourhood,Los Llanos,,Estepona,,36.43604970,-5.10790140,8.21,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,106,,f
+108,neighbourhood,Kempinski,,Estepona,,36.43604970,-5.10790140,8.21,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,106,,f
+109,municipality,Frigiliana,,Pinos de Alhaurín,,36.79087510,-3.89470610,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,2,,f
+112,area,El Higuerón,Higueron,Fuengirola,,36.58701260,-4.59966170,6.63,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,111,,f
+113,area,Zona Puerto Deportivo,,Fuengirola,,36.54096350,-4.61659770,6.63,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,111,,f
+114,area,Torreblanca del Sol,"Torreblanca,carvajal",Fuengirola,,36.56221920,-4.60568280,6.63,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,111,,f
+115,area,Centro Ciudad,,Fuengirola,,36.53901660,-4.62367600,6.63,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,111,,f
+116,area,Las Gaviotas,,Fuengirola,,36.55979500,-4.60957140,6.63,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,111,,f
+117,area,Zona Sohail,,Fuengirola,,36.53616250,-4.63410370,6.63,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,111,,f
+75,municipality,Competa,Cómpeta,Pinos de Alhaurín,,36.83281070,-3.97381300,2.1,2025-05-29 17:15:49.118854,2025-06-04 09:48:27.056613,2,"",f
+93,area,Selwo,Selwo,Estepona,,36.46494940,-5.07523640,8.21,2025-05-29 17:15:49.118854,2025-06-03 10:51:41.093068,76,"",f
+111,municipality,Fuengirola,Fuengirola,Fuengirola,,36.58701260,-4.59966170,6.63,2025-05-29 17:15:49.118854,2025-06-04 08:55:10.700292,2,"",f
+71,neighbourhood,Doña Julia Golf,"Doña Julia Golf,Doña Julia",Casares,,36.37885900,-5.22310300,8.48,2025-05-29 17:15:49.118854,2025-06-04 08:54:25.903187,70,"",f
+70,area,Doña Julia Golf,,Casares,,36.37885900,-5.22310300,8.48,2025-05-29 17:15:49.118854,2025-06-04 08:54:31.822838,65,"",f
+110,area,Frigiliana,Frigiliana,Pinos de Alhaurín,,36.79087510,-3.89470610,2.1,2025-05-29 17:15:49.118854,2025-06-04 10:42:55.372447,109,"",f
+118,area,Playa de los Boliches,,Fuengirola,,36.54645350,-4.61582290,6.63,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,111,,f
+119,area,Los Pacos,Los Pacos,Fuengirola,,36.56156390,-4.61702500,6.63,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,111,,f
+120,area,Los Boliches,Los Boliches,Fuengirola,,36.56319650,-4.60427840,6.63,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,111,,f
+121,municipality,Istán,Istán,Istán,,36.58209850,-4.94970070,4.83,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,2,,f
+122,municipality,Málaga,Málaga Center,Malaga,,36.72024540,-4.42206730,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,2,,f
+125,neighbourhood,Perchel sur - El Bulto,,Malaga,,36.70820110,-4.42946320,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,123,,f
+126,neighbourhood,Olletas - Sierra Blanquilla,,Malaga,,36.73259790,-4.41553850,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,123,,f
+127,neighbourhood,La Goleta - San Felipe Neri,,Malaga,,36.72597350,-4.42174570,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,123,,f
+128,neighbourhood,Perchel norte,,Malaga,,36.72005460,-4.42721220,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,123,,f
+130,neighbourhood,El Molinillo - Capuchinos,,Malaga,,36.72891610,-4.42399650,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,123,,f
+132,neighbourhood,Ensanche Centro - Soho,,Malaga,,36.71546610,-4.42399650,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,123,,f
+133,neighbourhood,La Merced,,Malaga,,36.72472390,-4.41917350,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,123,,f
+134,neighbourhood,La Victoria,,Malaga,,36.72633600,-4.41301610,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,123,,f
+135,neighbourhood,Cristo de la Epidemia,,Malaga,,36.73059450,-4.41499380,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,123,,f
+136,neighbourhood,Gibralfaro,,Malaga,,36.72333300,-4.41083300,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,123,,f
+137,neighbourhood,Conde de Ureña,,Malaga,,36.72804740,-4.41113600,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,123,,f
+139,neighbourhood,Malagueta - Monte Sancha,,La Cala del Moral,,36.72295260,-4.40342110,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,138,,f
+140,neighbourhood,Limonar,,La Cala del Moral,,36.72717720,-4.39827850,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,138,,f
+141,neighbourhood,Pedregalejo - Morlaco,,La Cala del Moral,,36.72385340,-4.37241570,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,138,,f
+144,neighbourhood,Cerrado de Calderón - Hacienda Paredes,,La Cala del Moral,,36.73660450,-4.37964060,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,138,,f
+146,neighbourhood,Olías,,La Cala del Moral,,36.77037880,-4.31991480,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,138,,f
+147,neighbourhood,Parque Clavero,,La Cala del Moral,,36.72616360,-4.38928010,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,138,,f
+148,neighbourhood,Mayorazgo,,La Cala del Moral,,36.73258360,-4.39935910,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,138,,f
+149,neighbourhood,Jarazmín,,La Cala del Moral,,36.72345220,-4.33467940,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,138,,f
+150,neighbourhood,La Mosca,,La Cala del Moral,,36.73479940,-4.37385770,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,138,,f
+157,area,Carretera de Cádiz,,Malaga,,36.69756100,-4.44425820,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,122,,f
+158,neighbourhood,Girón - Las Delicias - Pacífico,,Malaga,,36.69756100,-4.44425820,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,157,,f
+159,neighbourhood,Finca el Pato - Torre del Río,,Malaga,,36.68197960,-4.45616150,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,157,,f
+160,neighbourhood,Puerta Blanca - Almudena,,Malaga,,36.68803520,-4.44892100,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,157,,f
+161,neighbourhood,Los Guindos - Parque Mediterráneo - Santa Paula,,Malaga,,36.69141280,-4.44887720,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,157,,f
+162,neighbourhood,Nuevo San Andrés - Dos Hermanas,,Malaga,,36.70259510,-4.45048820,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,157,,f
+163,neighbourhood,Paseo Marítimo Oeste-Pacífico,,Malaga,,36.69605870,-4.43943330,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,157,,f
+164,neighbourhood,La Princesa,,Malaga,,36.70721770,-4.43782510,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,157,,f
+165,neighbourhood,La Luz,,Malaga,,36.69682880,-4.45487450,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,157,,f
+166,neighbourhood,Vistafranca,,Malaga,,36.69831820,-4.45101380,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,157,,f
+167,neighbourhood,El Torcal,,Malaga,,36.69975960,-4.44844020,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,157,,f
+168,neighbourhood,Pacífico,,Malaga,,36.69605870,-4.43943330,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,157,,f
+169,neighbourhood,Huelin,,Malaga,,36.70288140,-4.43686020,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,157,,f
+292,area,La Cala del Moral,,La Cala del Moral,,36.71788790,-4.30258760,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,291,,f
+129,neighbourhood,La Trinidad,La Trinidad,Malaga,,36.72454630,-4.43460730,5.01,2025-05-29 17:15:49.118854,2025-06-04 10:47:04.748921,123,"",f
+131,neighbourhood,El Ejido,El Ejido,Malaga,,36.72862130,-4.41875900,5.01,2025-05-29 17:15:49.118854,2025-06-04 10:48:04.810019,123,"",f
+124,neighbourhood,Centro Histórico,"Málaga Center,Málaga Centro,Centro Histórico",Malaga,,36.72024540,-4.42206730,5.01,2025-05-29 17:15:49.118854,2025-06-04 10:42:07.28477,123,"",f
+143,neighbourhood,Pinares de San Antón,Pinares de San Antón,La Cala del Moral,,36.73874920,-4.35779760,5.01,2025-05-29 17:15:49.118854,2025-06-04 10:44:17.745717,138,"",f
+145,neighbourhood,El Candado,El Candado,La Cala del Moral,,36.71779150,-4.34238440,5.01,2025-05-29 17:15:49.118854,2025-06-04 10:45:57.93342,138,"",f
+142,neighbourhood,El Palo,El Palo,La Cala del Moral,,36.72186710,-4.35972450,5.01,2025-05-29 17:15:49.118854,2025-06-04 10:49:01.950323,138,"",f
+123,area,Centro,"Martiricos,Malagueta",Malaga,,36.72024540,-4.42206730,5.01,2025-05-29 17:15:49.118854,2025-06-05 10:45:22.224693,122,"",f
+138,area,Este,"Málaga Este,Pedregalejo",La Cala del Moral,,36.72295260,-4.40342110,5.01,2025-05-29 17:15:49.118854,2025-06-05 10:45:48.580277,122,"",f
+185,neighbourhood,Guadalmar,,Malaga,,36.66794690,-4.46352870,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,184,,f
+186,neighbourhood,Cortijo de Maza-Finca Monsalvez-El Olivar,,Malaga,,36.64798570,-4.50122490,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,184,,f
+187,neighbourhood,Churriana-El Pizarrillo-La Noria-Guadalsol,,Malaga,,36.66199690,-4.50585200,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,184,,f
+188,area,Martiricos - La Roca,,Malaga,,36.73637020,-4.43322000,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,122,,f
+189,neighbourhood,Palma - Palmilla,,Malaga,,36.73637020,-4.43322000,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,188,,f
+201,area,Chullera,,Manilva,,36.34294810,-5.23645610,4.83,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,200,,f
+202,area,San Luis de Sabinillas,San Luis de Sabinillas,Manilva,,36.36630640,-5.22732010,4.83,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,200,,f
+203,area,La Duquesa,La Duquesa,Manilva,,36.35841330,-5.23025650,4.83,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,200,,f
+204,area,Alcorrín,,Manilva,,36.34513490,-5.24820460,4.83,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,200,,f
+205,area,Puerto de la Duquesa,,Manilva,,36.35841330,-5.23025650,4.83,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,200,,f
+206,area,El Castillo,,Manilva,,36.34816690,-5.23329860,4.83,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,200,,f
+207,municipality,Marbella,Nueva Andalucía,Nueva andalucia,,36.49237520,-4.95160960,7.85,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,2,,f
+210,neighbourhood,Puerto Banús,"Puerto - Puerto Banús,Puerto Banús",Puerto Banus,,36.48835400,-4.95654830,7.85,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,208,,f
+211,neighbourhood,Las Brisas,Las Brisas,Nueva andalucia,,36.51041020,-4.96994740,7.85,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,208,,f
+212,neighbourhood,Aloha,Aloha,Nueva andalucia,,36.51137240,-4.95917780,7.85,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,208,,f
+213,neighbourhood,La Dama de Noche-La Alzambra,,Puerto Banus,,36.49609110,-4.95238570,7.85,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,208,,f
+214,neighbourhood,Rodeo Alto - Guadaiza - La Campana,La Campana,Nueva andalucia,,36.48959810,-4.97266820,7.85,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,208,,f
+222,area,San Pedro de Alcántara,San Pedro de Alcántara,San Pedro Alcántara,,36.48676650,-4.99057430,7.85,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,207,,f
+223,neighbourhood,Linda Vista,,San Pedro Alcántara,,36.47358900,-4.98847050,7.85,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,222,,f
+224,neighbourhood,San Pedro Pueblo,,San Pedro Alcántara,,36.48676650,-4.99057430,7.85,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,222,,f
+225,neighbourhood,Guadalmina Alta,"Guadalmina Alta,Valle del Sol",San Pedro Alcántara,,36.48016340,-5.00750950,7.85,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,222,,f
+226,neighbourhood,Guadalmina Baja,Guadalmina Baja,San Pedro Alcántara,,36.47363000,-5.00250000,7.85,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,222,,f
+228,neighbourhood,Cortijo Blanco,Cortijo Blanco,San Pedro Alcántara,,36.47890700,-4.97234700,7.85,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,222,,f
+229,area,Marbella Pueblo,Marbella,Marbella,,36.51091760,-4.88506990,7.85,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,207,,f
+230,neighbourhood,Casco Antiguo,Marbella,Marbella,,36.51091760,-4.88506990,7.85,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,229,,f
+231,neighbourhood,Valdeolletas-Las Cancelas-Xarblanca,,Marbella,,36.51719540,-4.89331860,7.85,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,229,,f
+232,neighbourhood,Playa Bajadilla-Puertos,,Marbella,,36.50776360,-4.87718630,7.85,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,229,,f
+233,neighbourhood,Playa de la Fontanilla,,Marbella,,36.50674750,-4.89996870,7.85,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,229,,f
+234,neighbourhood,Ricardo Soriano,,Marbella,,36.51036790,-4.89423440,7.85,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,229,,f
+200,municipality,Manilva,Manilva,Manilva,,36.34294810,-5.23645610,4.83,2025-05-29 17:15:49.118854,2025-06-03 10:56:33.311899,2,"",f
+184,area,Churriana,Churriana,Malaga,,36.66794690,-4.46352870,5.01,2025-05-29 17:15:49.118854,2025-06-04 10:44:00.311896,122,"",f
+208,area,Nueva Andalucía,Nueva Andalucía,Nueva andalucia,"Known as the “Golf Valley,” Nueva Andalucía is Marbella’s most in-demand residential area, combining modern villas, golf-front properties, and vibrant lifestyle. Minutes from Puerto Banús, it’s ideal for investors, expats, and families alike.",36.49237520,-4.95160960,7.85,2025-05-29 17:15:49.118854,2025-06-12 12:44:10.12941,207,"",f
+209,neighbourhood,Los Naranjos,Los Naranjos,Nueva andalucia,"Los Naranjos is a prestigious residential enclave nestled in the heart of Marbella’s Golf Valley, just minutes from Puerto Banús. Known for its tranquil ambiance, lush greenery, and proximity to top-tier golf courses like Los Naranjos Golf Club, it blends exclusivity with convenience. The area offers elegant villas, gated communities, international schools, and upscale amenities—ideal for families, holidaymakers, or investors seeking high rental demand and lifestyle appeal.",36.50982520,-4.98031270,7.85,2025-05-29 17:15:49.118854,2025-06-24 09:32:15.88479,208,"",f
+227,neighbourhood,Nueva Alcántara,,San Pedro Alcántara,"Nueva Alcántara is one of the most desirable residential areas in San Pedro de Alcántara, Marbella. Located just steps from the beach and a short stroll from the vibrant town center, it offers the perfect balance of coastal tranquility and urban convenience. The neighborhood features wide tree-lined avenues, luxury developments, 24-hour security, and proximity to top-tier amenities — including international schools, sports clubs, restaurants, and beach clubs. Ideal for families and year-round living, Nueva Alcántara stands out for its quality of life and long-term investment potential.",36.48676650,-4.99057430,7.85,2025-05-29 17:15:49.118854,2025-07-01 08:16:48.290403,222,"",f
+235,neighbourhood,La Puya - La Ermita,,Marbella,,36.50928860,-4.86639920,7.85,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,229,,f
+236,neighbourhood,Huerta Belón-Calvario,,Marbella,,36.51247360,-4.89290950,7.85,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,229,,f
+237,neighbourhood,La Merced,,Marbella,,36.51249380,-4.90166470,7.85,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,229,,f
+239,neighbourhood,La Patera,,Marbella,,36.51724750,-4.88012510,7.85,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,229,,f
+240,area,Elviria-Cabopino,,Mijas Costa,,36.49988060,-4.76763860,7.85,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,207,,f
+241,neighbourhood,Santa María,,Mijas Costa,,36.49988060,-4.76763860,7.85,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,240,,f
+242,neighbourhood,Marbesa,Marbesa,Mijas Costa,,36.48800410,-4.75796770,7.85,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,240,,f
+243,neighbourhood,Cabopino-Artola,"Artola,Cabopino,Puerto de Cabopino",Mijas Costa,,36.48918520,-4.74837560,7.85,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,240,,f
+244,neighbourhood,Elviria,Elviria,Mijas Costa,,36.50137880,-4.78693690,7.85,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,240,,f
+245,neighbourhood,Romana Playa,,Mijas Costa,,36.49085010,-4.77634900,7.85,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,240,,f
+246,neighbourhood,Hacienda Las Chapas,"Hacienda Las Chapas,Carib Playa",Mijas Costa,,36.49442220,-4.75535840,7.85,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,240,,f
+247,neighbourhood,Reserva de Marbella,Reserva de Marbella,Mijas Costa,,36.50265050,-4.74665960,7.85,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,240,,f
+248,neighbourhood,Real de Zaragoza,,Mijas Costa,,36.49598330,-4.78641560,7.85,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,240,,f
+257,neighbourhood,Las Chapas-Alicate Playa,Las Chapas,San Pedro Alcántara,,36.50555400,-4.81503100,7.85,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,255,,f
+258,neighbourhood,Costabella,Costabella,San Pedro Alcántara,,36.50072030,-4.80523370,7.85,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,255,,f
+259,neighbourhood,Santa Clara,Santa Clara,San Pedro Alcántara,,36.50829600,-4.81651620,7.85,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,255,,f
+261,area,Riviera del Sol,"Riviera del Sol,Torrenueva,miraflores",La Cala de Mijas,,36.50755110,-4.71410680,6.43,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,260,,f
+263,neighbourhood,Los Rios - CARE,,Las Lagunas de Mijas,,36.55151140,-4.63147100,6.43,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,262,,f
+265,neighbourhood,Los Árboles,,Las Lagunas de Mijas,,36.54763260,-4.63523340,6.43,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,262,,f
+266,neighbourhood,Las Cañadas,,Las Lagunas de Mijas,,36.55196260,-4.62920970,6.43,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,262,,f
+267,neighbourhood,Centro,,Las Lagunas de Mijas,,36.54376920,-4.63728660,6.43,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,262,,f
+268,area,Sitio de Calahonda,"Calahonda,Calypso",La Cala de Mijas,,36.49445760,-4.72130040,6.43,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,260,,f
+269,area,Mijas Pueblo,,Mijas,,36.59477700,-4.63856810,6.43,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,260,,f
+270,area,Calaburra - Chaparral,"El Faro,El Chaparral",La Cala de Mijas,,36.51894340,-4.66244950,6.43,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,260,,f
+272,area,La Cala Golf - Lagar Martell,"Calanova Golf,La Cala Golf,La Cala Hills",Mijas,,36.54216020,-4.72228860,6.43,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,260,,f
+273,area,Campo de Mijas,Campo Mijas,Mijas,,36.55845500,-4.63658420,6.43,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,260,,f
+274,area,Mijas Golf,"Mijas Golf,el coto",Mijas,,36.54928970,-4.66915120,6.43,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,260,,f
+275,area,Valtocado - La Alquería - La Atalaya,"La Atalaya,Valtocado",Mijas,,36.59984270,-4.68053050,6.43,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,260,,f
+276,area,Hipódromo-Cerrado del Águila,Hipódromo-Cerrado del Águila,Mijas,,36.52739840,-4.66150520,6.43,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,260,,f
+277,municipality,Monda,Monda,Pinos de Alhaurín,,36.62967250,-4.83197360,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,2,,f
+279,area,Centro,,La Cala del Moral,,36.74668200,-3.87826370,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,278,,f
+280,area,Avda Pescia - Ctra de Frigiliana,,La Cala del Moral,,36.75338890,-3.87513490,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,278,,f
+281,area,Chaparil - Torrecilla - Punta Lara,,La Cala del Moral,,36.74225320,-3.88623290,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,278,,f
+282,area,Capistrano,,La Cala del Moral,,36.75364240,-3.86668260,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,278,,f
+283,area,Almijara,,La Cala del Moral,,36.76128160,-3.87462900,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,278,,f
+285,area,Maro - Cuevas de Nerja,,La Cala del Moral,,36.76201370,-3.84493250,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,278,,f
+286,area,Burriana,,La Cala del Moral,,36.75038020,-3.86644480,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,278,,f
+289,area,Palo Alto,,Ojén,,36.54401480,-4.86197790,4.83,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,287,,f
+290,area,Ojén Pueblo,Ojén,Ojén,,36.56543020,-4.85530460,4.83,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,287,,f
+271,area,La Cala de Mijas,"La Cala de Mijas,La Cala",La Cala de Mijas,,36.50225720,-4.68185480,6.43,2025-05-29 17:15:49.118854,2025-06-03 10:47:28.684674,260,"",f
+260,municipality,Mijas,"Mijas Costa,Mijas",La Cala de Mijas,,36.50755110,-4.71410680,6.43,2025-05-29 17:15:49.118854,2025-06-03 10:57:54.157384,2,"",f
+264,neighbourhood,Las Flores,Miraflores,Las Lagunas de Mijas,,36.54025380,-4.63988620,6.43,2025-05-29 17:15:49.118854,2025-06-03 10:50:12.694788,262,"",f
+284,area,Nueva Nerja,Torrenueva,La Cala del Moral,,36.75144210,-3.87727170,5.01,2025-05-29 17:15:49.118854,2025-06-03 10:51:21.496071,278,"",f
+262,area,Las Lagunas,"Las Lagunas,Sierrezuela",Las Lagunas de Mijas,,36.55151140,-4.63147100,6.43,2025-05-29 17:15:49.118854,2025-06-03 11:01:42.055861,260,"",f
+278,municipality,Nerja,Nerja,La Cala del Moral,,36.74668200,-3.87826370,5.01,2025-05-29 17:15:49.118854,2025-06-04 08:07:32.673401,2,"",f
+287,municipality,Ojén,,Ojén,,36.52966320,-4.75500110,4.83,2025-05-29 17:15:49.118854,2025-06-04 08:16:22.895813,2,"",f
+291,municipality,Rincón de la Victoria,Rincón de la Victoria,La Cala del Moral,,36.71788790,-4.30258760,2.1,2025-05-29 17:15:49.118854,2025-06-04 09:54:13.324659,2,"",f
+255,area,Las Chapas-El Rosario,El Rosario,San Pedro Alcántara,"A tranquil, family-friendly area just east of Marbella, El Rosario features spacious villas, sea views, and a relaxed community feel. With close access to international schools, beaches, and golf courses, it’s perfect for both year-round living and holiday escapes.",36.50453070,-4.80884670,7.85,2025-05-29 17:15:49.118854,2025-06-12 12:43:59.180298,207,"",f
+256,neighbourhood,El Rosario-Ricmar,El Rosario,San Pedro Alcántara,"A tranquil, family-friendly area just east of Marbella, El Rosario features spacious villas, sea views, and a relaxed community feel. With close access to international schools, beaches, and golf courses, it’s perfect for both year-round living and holiday escapes.",36.50453070,-4.80884670,7.85,2025-05-29 17:15:49.118854,2025-06-12 12:50:05.337632,255,"",f
+293,area,Lo Cea - Los Cortijos,,La Cala del Moral,,36.71658440,-4.26405470,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,291,,f
+294,area,Añoreta Golf - Paraíso del Sol,,La Cala del Moral,,36.72011300,-4.23979590,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,291,,f
+295,area,Playa del Rincón,,La Cala del Moral,,36.71468500,-4.28879410,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,291,,f
+296,area,Cotomar - Urbanizaciones,,La Cala del Moral,,36.71480770,-4.27249920,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,291,,f
+297,area,Añoreta baja,,La Cala del Moral,,36.72163860,-4.24558310,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,291,,f
+298,area,Gran Sol - Montesol,,La Cala del Moral,,36.72101010,-4.28474490,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,291,,f
+299,area,Torre de Benagalbón,,La Cala del Moral,,36.71452820,-4.24615310,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,291,,f
+300,area,Benagalbón,,La Cala del Moral,,36.73809080,-4.24551210,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,291,,f
+301,municipality,Ronda,Ronda,Ronda,,36.74620900,-5.16122510,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,2,,f
+302,area,Casco Histórico,,Ronda,,36.73798020,-5.16459470,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,301,,f
+303,area,Centro,,Ronda,,36.74170440,-5.16467880,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,301,,f
+304,area,Partidas Norte,,Ronda,,36.76831950,-5.15379570,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,301,,f
+305,area,San Cristóbal,,Ronda,,36.74934730,-5.15823310,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,301,,f
+306,area,San Francisco,,Ronda,,36.74587310,-5.16509570,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,301,,f
+307,area,San Rafael,,Ronda,,36.74896460,-5.15116230,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,301,,f
+308,area,El Fuerte - La Dehesa,,Ronda,,36.75200270,-5.17328720,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,301,,f
+309,area,La Planilla,,Ronda,,36.72791480,-5.15226590,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,301,,f
+310,area,Partidas Sur,,Ronda,,36.73408550,-5.16432110,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,301,,f
+311,area,Zona Juzgados - La Feria,,Ronda,,36.75042740,-5.14446850,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,301,,f
+313,area,Poniente-Faro,,La Cala del Moral,,36.73504300,-4.09608590,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,312,,f
+314,area,Centro,,La Cala del Moral,,36.74124740,-4.09428610,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,312,,f
+315,area,Viña Málaga,,La Cala del Moral,,36.74150520,-4.09855050,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,312,,f
+316,area,Paseo Marítimo de Levante,,La Cala del Moral,,36.74399320,-4.08660640,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,312,,f
+317,area,El Tomillar,,La Cala del Moral,,36.75164260,-4.08801580,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,312,,f
+318,municipality,Torremolinos,Torremolinos,Torremolinos,,36.62198170,-4.49992870,5.5,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,2,,f
+320,neighbourhood,Manantiales - Estación de Autobuses,,Torremolinos,,36.62721200,-4.50257300,5.5,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,319,,f
+321,neighbourhood,Calvario,,Torremolinos,,36.62304500,-4.50353600,5.5,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,319,,f
+322,neighbourhood,Ayuntamiento,,Torremolinos,,36.62132620,-4.50749450,5.5,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,319,,f
+323,neighbourhood,Loma de los Riscos,,Torremolinos,,36.61831170,-4.50412490,5.5,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,319,,f
+324,area,Playamar,Los Alamos,Torremolinos,,36.64424510,-4.48199270,5.5,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,318,,f
+325,neighbourhood,Los Álamos,Los Alamos,Torremolinos,,36.64424510,-4.48199270,5.5,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,324,,f
+326,neighbourhood,Playamar - Benyamina,Playamar,Torremolinos,,36.63167280,-4.49385520,5.5,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,324,,f
+327,neighbourhood,La Colina,La Colina,Torremolinos,,36.63937860,-4.49440890,5.5,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,324,,f
+328,area,Montemar,Montemar,Torremolinos,,36.60536800,-4.51149190,5.5,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,318,,f
+329,area,El Pinillo,El Pinillo,Torremolinos,,36.60984410,-4.51536000,5.5,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,318,,f
+330,area,La Carihuela - Los Nidos,La Carihuela,Torremolinos,,36.60991560,-4.50495370,5.5,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,318,,f
+331,area,El Bajondillo,Bajondillo,Torremolinos,,36.62397490,-4.50171470,5.5,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,318,,f
+332,area,La Leala - El Saltillo,La Leala,Torremolinos,,36.60965430,-4.52600150,5.5,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,318,,f
+333,area,El Pinar - Palacio de Congresos,,Torremolinos,,36.63226310,-4.50530710,5.5,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,318,,f
+335,area,Torrox Pueblo,,La Cala del Moral,,36.75447830,-3.95149230,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,334,,f
+336,area,El Peñoncillo,,La Cala del Moral,,36.73470730,-3.94085630,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,334,,f
+337,area,Urbanización Santa Rosa,,La Cala del Moral,,36.73808780,-3.97166900,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,334,,f
+338,area,Centro Internacional,,La Cala del Moral,,36.75816020,-3.95116220,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,334,,f
+339,area,El Morche,,La Cala del Moral,,36.73902110,-3.99321980,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,334,,f
+340,area,Laguna Beach,,La Cala del Moral,,36.73282330,-3.97755970,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,334,,f
+341,area,Torrox Park,,La Cala del Moral,,36.75447830,-3.95149230,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,334,,f
+343,area,Norte - Barrio del Pilar - El Reñidero,,Pinos de Alhaurín,,36.78763320,-4.10509500,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,342,,f
+344,area,Camino Viejo de Málaga,,Pinos de Alhaurín,,36.77536200,-4.10341640,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,342,,f
+350,area,Camino Algarrobo - Las Arenas,,Pinos de Alhaurín,,36.77423960,-4.09405310,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,342,,f
+319,area,Centro,"Torremolinos Center,Torremolinos Centro",Torremolinos,,36.62745470,-4.49855050,5.5,2025-05-29 17:15:49.118854,2025-06-04 08:56:48.813772,318,"",f
+345,area,Centro Histórico,,Malaga,,36.78350080,-4.10288780,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,342,,f
+348,area,Algeciras,Algeciras,Sotogrande,,36.14075910,-5.45623300,6.59,2025-05-29 17:15:49.118854,2025-06-16 12:24:56.326172,347,"",f
+347,municipality,Campo de Gibraltar,,Sotogrande,,36.13319000,-5.44919440,6.59,2025-05-29 17:15:49.118854,2025-06-16 12:24:38.365227,346,"",f
+346,province,Cadiz,Cadiz,Sotogrande,,36.52101420,-6.28045650,6.59,2025-05-29 17:15:49.118854,2025-06-16 12:22:25.427011,1,"",f
+312,municipality,Torre del Mar,"Torre del Mar,Almayate",La Cala del Moral,,36.73504300,-4.09608590,5.01,2025-05-29 17:15:49.118854,2025-06-05 10:47:46.155148,2,"",f
+334,municipality,Torrox,"Torrox,Torrox Costa",La Cala del Moral,,36.75447830,-3.95149230,5.01,2025-05-29 17:15:49.118854,2025-06-04 10:42:33.417127,2,"",f
+351,area,San Roque,"San Roque,San Martín de Tesorillo,San Roque Club",Sotogrande,,36.21046150,-5.38443170,6.59,2025-05-29 17:15:49.118854,2025-06-16 12:25:36.281005,347,"",f
+353,area,El Limonar,,Pinos de Alhaurín,,36.76969850,-4.09377950,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,342,,f
+361,area,Centro Ciudad - El Carmen,,Pinos de Alhaurín,,36.78094180,-4.10591000,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,342,,f
+362,area,Los Olivos,,Pinos de Alhaurín,,36.77519410,-4.09835970,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,342,,f
+363,area,Capuchinos,,Pinos de Alhaurín,,36.77956940,-4.10057560,2.1,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,342,,f
+349,area,Zona Hispanidad-Vivar Téllez,,Pinos de Alhaurín,,36.78345660,-4.10870580,2.1,2025-05-29 17:15:49.118854,2025-05-30 07:52:38.803472,342,"",f
+401,country,Montenegro,,,,42.70867800,19.37439000,,2025-05-30 10:23:47.839864,2025-05-30 10:23:47.839864,,"",f
+403,province,Almeria,,,,36.85121510,-2.45216580,,2025-05-30 18:13:06.687387,2025-05-30 18:13:06.687387,1,"",f
+199,area,Campanillas,Campanillas,Malaga,,36.73130990,-4.55031080,5.01,2025-05-29 17:15:49.118854,2025-06-04 10:46:23.824605,122,"",f
+151,area,Bailén - Miraflores,Bailen - Miraflores,Malaga,,36.73035150,-4.44579330,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,122,,f
+152,neighbourhood,Victoria Eugenia,,Malaga,,36.72948290,-4.43589530,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,151,,f
+153,neighbourhood,Los Castillejos - La Trinidad,,Malaga,,36.72550920,-4.44329320,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,151,,f
+155,neighbourhood,La Florida - Parque norte,,Malaga,,36.72369620,-4.44683170,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,151,,f
+156,neighbourhood,San Alberto - La Alcubilla - Florisol,,Malaga,,36.73583620,-4.45286640,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,151,,f
+170,area,Cruz de Humilladero,,Malaga,,36.71949820,-4.43766430,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,122,,f
+171,neighbourhood,Carranque - Haza Cuevas,,Malaga,,36.71949820,-4.43766430,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,170,,f
+172,neighbourhood,Cruz del Humilladero - Los Tilos,,Malaga,,36.71324250,-4.43649230,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,170,,f
+173,neighbourhood,Polígonos - Recinto Ferial,,Malaga,,36.66989040,-4.47353860,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,170,,f
+174,neighbourhood,Santa Cristina - San Rafael,,Malaga,,36.71231090,-4.45598250,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,170,,f
+175,neighbourhood,Camino de Antequera,,Malaga,,36.72197520,-4.45425230,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,170,,f
+176,neighbourhood,Portada Alta-La Barriguilla,,Malaga,,36.71483500,-4.45677240,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,170,,f
+177,neighbourhood,Pol Ctra de Cártama,,Malaga,,36.71381270,-4.45037040,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,170,,f
+179,neighbourhood,El Atabal,,Malaga,,36.73496210,-4.47372060,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,178,,f
+180,neighbourhood,El Cortijuelo,,Malaga,,36.75955960,-4.49446300,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,178,,f
+181,neighbourhood,Los Almendros - El Limonero - El Tomillar,Los Almendros,Malaga,,36.73611950,-4.48319500,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,178,,f
+182,neighbourhood,Puertosol - Santa Isabel,,Malaga,,36.74324880,-4.49560430,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,178,,f
+183,neighbourhood,Fuente Alegre - El Chaparral - Los Morales,,Malaga,,36.74692460,-4.48190740,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,178,,f
+190,neighbourhood,Martiricos - La Roca,,Malaga,,36.73081410,-4.42721220,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,188,,f
+192,neighbourhood,Huerta Nueva - Jardín de Málaga,,Malaga,,36.75460750,-4.42013800,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,191,,f
+193,neighbourhood,Mangas Verdes - Las Flores,,Malaga,,36.74171750,-4.41885660,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,191,,f
+194,neighbourhood,Cortijo Bazán - Los Casinis - Los Cipreses,,Malaga,,36.74476760,-4.41698840,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,191,,f
+196,neighbourhood,El Tejar - Hacienda Bizcochero,,Malaga,,36.72718930,-4.47032020,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,195,,f
+197,neighbourhood,El Consul - El Romeral,,Malaga,,36.72143020,-4.48352730,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,195,,f
+198,neighbourhood,Cortijo Alto,,Malaga,,36.71064170,-4.46324040,5.01,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,195,,f
+216,neighbourhood,Sierra Blanca,Sierra Blanca,Malaga,,36.52200610,-4.91935640,7.85,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,215,,f
+219,neighbourhood,Puente Romano,,Malaga,,36.50300100,-4.92396190,7.85,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,215,,f
+220,neighbourhood,Nagüeles,Nagüeles,Malaga,,36.51024120,-4.91866720,7.85,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,215,,f
+221,neighbourhood,Las Lomas de Río Verde,,Malaga,,36.50169800,-4.94356280,7.85,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,215,,f
+249,area,Rio Real-Los Monteros,Río Real,Malaga,,36.51277620,-4.84421350,7.85,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,207,,f
+250,neighbourhood,Rio Real,Río Real,Malaga,,36.51277620,-4.84421350,7.85,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,249,,f
+1,country,Spain,Spain,Alhaurín de la Torre,,36.66034180,-4.55856720,2.1,2025-05-29 17:15:49.118854,2025-06-09 13:20:17.782224,,"",f
+355,area,Tarifa,Tarifa,Sotogrande,,36.01432090,-5.60444970,6.59,2025-05-29 17:15:49.118854,2025-06-16 12:34:07.324261,347,"",f
+178,area,Puerto de la Torre,Puerto de la Torre,Malaga,,36.73496210,-4.47372060,5.01,2025-05-29 17:15:49.118854,2025-06-03 11:05:31.975862,122,"",f
+360,area,Los Barrios,Los Barrios,Sotogrande,,36.18506450,-5.49255730,6.59,2025-05-29 17:15:49.118854,2025-06-16 12:25:24.027937,347,"",f
+218,neighbourhood,La Carolina-Guadalpín,"La Carolina-Guadalpín,The Golden Mile",Malaga,,36.51024120,-4.91866720,7.85,2025-05-29 17:15:49.118854,2025-06-04 08:56:34.794599,215,"",f
+154,neighbourhood,Suárez,,Malaga,,36.72768190,-4.44240240,5.01,2025-05-29 17:15:49.118854,2025-06-04 10:40:15.601131,151,"",f
+191,area,Ciudad Jardín,Ciudad Jardín,Malaga,,36.75460750,-4.42013800,5.01,2025-05-29 17:15:49.118854,2025-06-04 10:47:27.826463,122,"",f
+195,area,Teatinos,Teatinos,Malaga,,36.72718930,-4.47032020,5.01,2025-05-29 17:15:49.118854,2025-06-04 10:47:42.029904,122,"",f
+402,province,Alicante,Alicante,Alicante,,38.48258010,-0.75328090,,2025-05-30 10:31:49.383121,2025-06-05 13:54:05.4536,1,"",f
+215,area,Nagüeles-Milla de Oro,Sierra Blanca,Malaga,"An exclusive residential enclave within Marbella’s famed Golden Mile, Nagüeles offers peace and privacy just minutes from the beach and city center. Surrounded by lush greenery and prestigious villas, it’s ideal for those seeking elegance and proximity to luxury amenities.",36.52200610,-4.91935640,7.85,2025-05-29 17:15:49.118854,2025-06-12 12:43:35.970447,207,"",f
+217,neighbourhood,Lomas de Marbella Club,,Malaga,"A prestigious, secure community at the heart of the Golden Mile. Lomas de Marbella Club offers top-tier villas, penthouses, and proximity to the Marbella Club, Puente Romano, and beach. A top choice for discerning buyers valuing luxury and centrality.",36.50733710,-4.93035480,7.85,2025-05-29 17:15:49.118854,2025-06-12 12:45:17.428346,215,"",f
+359,area,La Línea,La Línea,Sotogrande,,36.16825630,-5.34947190,6.59,2025-05-29 17:15:49.118854,2025-06-16 12:25:12.126181,347,"",f
+354,neighbourhood,La Alcaidesa,La Alcaidesa,Sotogrande,,36.23527800,-5.31916700,6.59,2025-05-29 17:15:49.118854,2025-06-16 12:33:42.580494,351,"",f
+251,neighbourhood,Bahía de Marbella,Bahía de Marbella,Malaga,,36.50225870,-4.83074090,7.85,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,249,,f
+252,neighbourhood,Alto de los Monteros,Altos de los Monteros,Malaga,,36.52732610,-4.83552100,7.85,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,249,,f
+253,neighbourhood,Bello Horizonte-Lindasol,Torre Real,Malaga,,36.51664100,-4.85795600,7.85,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,249,,f
+254,neighbourhood,Los Monteros,Los Monteros,Malaga,,36.50565230,-4.82587970,7.85,2025-05-29 17:15:49.118854,2025-05-29 17:15:49.118854,249,,f
+58,area,Montealto,,Benalmádena,,36.60169720,-4.54853890,5.77,2025-05-29 17:15:49.118854,2025-06-02 09:47:42.384934,42,"",f
+85,neighbourhood,Atalaya-Isdabel,"Atalaya-Isdabel,El presidente,Hacienda del Sol,Atalaya",Estepona,,36.46469460,-5.01466970,8.21,2025-05-29 17:15:49.118854,2025-06-03 10:44:43.806267,77,"",f
+406,area,Torrevieja,Torrevieja,,,37.98488060,-0.68043370,,2025-06-04 13:44:46.82815,2025-06-04 13:44:46.82815,405,"",f
+405,municipality,Costa Blanca,Costa Blanca,,,38.50438380,-0.26434550,,2025-06-04 13:44:26.056044,2025-06-04 13:47:44.86734,402,"",f
+407,area,Santa Pola,Santa Pola,,,38.19656140,-0.56124380,,2025-06-04 13:48:12.310312,2025-06-04 13:48:12.310312,405,"",f
+408,area,Denia,Denia,,,38.83879920,0.10505570,,2025-06-04 13:49:49.784389,2025-06-04 13:49:49.784389,405,"",f
+409,area,Benidorm,Benidorm,,,38.54119280,-0.12338310,,2025-06-04 15:28:47.635348,2025-06-04 15:28:47.635348,405,"",f
+410,area,Busot,Busot,,,38.48359310,-0.41782010,,2025-06-04 15:29:56.737727,2025-06-04 15:29:56.737727,405,"",f
+411,area,Torre de la Horadada,Torre de la Horadada,,,37.86528080,-0.76498350,,2025-06-04 15:32:05.942664,2025-06-04 15:32:05.942664,405,"",f
+342,municipality,Vélez-Malaga,"Vélez-Málaga,Algarrobo",Pinos de Alhaurín,,36.78763320,-4.10509500,2.1,2025-05-29 17:15:49.118854,2025-06-05 10:44:22.406452,2,"",f
+39,area,El Madroñal,El Madroñal,Benahavís,"These ultra-private, gated hilltop estates offer panoramic views, unmatched exclusivity, and full security. Preferred by high-net-worth individuals seeking privacy, nature, and luxury living — just 15–20 minutes from Marbella’s coast.",36.52688480,-5.00548030,6.59,2025-05-29 17:15:49.118854,2025-06-12 12:45:32.729757,31,"",f
+41,area,La Zagaleta,La Zagaleta,Benahavís,"These ultra-private, gated hilltop estates offer panoramic views, unmatched exclusivity, and full security. Preferred by high-net-worth individuals seeking privacy, nature, and luxury living — just 15–20 minutes from Marbella’s coast.",36.54413250,-5.02318720,6.59,2025-05-29 17:15:49.118854,2025-06-12 12:45:41.902923,31,"",f
+38,area,La Alquería,,Benahavís,"La Alquería is a rising luxury residential area in Benahavís, just 10 minutes from Puerto Banús. Surrounded by golf courses and open sea and mountain views, it offers modern villas and elegant apartments in a quiet, secure environment. Ideal for families, investors, or second-home buyers seeking serenity, views, and high-quality construction — all within easy reach of Marbella, Estepona, and top schools.",36.49344440,-5.02611490,6.59,2025-05-29 17:15:49.118854,2025-06-12 13:04:12.775039,31,"",f
+412,municipality,Guaro,Guaro,,,36.65648590,-4.83456540,,2025-06-13 14:18:52.967969,2025-06-13 14:18:52.967969,2,"",f
+352,neighbourhood,Guadiaro,"Guadiaro,Pueblo Nuevo de Guadiaro,San Diego,Punta Chullera,Torreguadiaro,San Enrique de Guadiaro",Sotogrande,,36.29980780,-5.30338950,6.59,2025-05-29 17:15:49.118854,2025-06-16 12:25:56.174154,351,"",f
+356,neighbourhood,Sotogrande,"Sotogrande,Sotogrande Alto,Sotogrande Costa,Sotogrande Marina,Sotogrande Playa,Sotogrande Puerto,San Enrique",Sotogrande,,36.27784570,-5.29307500,6.59,2025-05-29 17:15:49.118854,2025-06-16 12:33:53.550146,351,"",f
+238,neighbourhood,Huerta del Prado-La Montua,,Marbella,"La Montua is a small, established residential enclave in Marbella (Málaga, Spain), perched just north of the city centre above the Huerta del Prado district.
+
+Its gently sloping streets are lined with mature pine and palm trees, providing both privacy and lush greenery. From here, residents enjoy sweeping panoramic views of the Mediterranean coastline, the Sierra Blanca range and La Concha peak. Despite its peaceful, suburban feel, La Montua lies within easy reach of Marbella’s Old Town, beaches, marina, schools and shops, making it a prized balance of tranquility and convenience",36.52213420,-4.89077830,7.85,2025-05-29 17:15:49.118854,2025-07-11 11:49:15.11945,229,"",f
+288,area,La Mairena,La Mairena,Ojén,"La Mairena is an upmarket residential enclave perched on the hillside above Elviria in the municipality of Ojén, Málaga. Nestled at approximately 430 m above sea level within the foothills of the Sierra de las Nieves, it benefits from a unique microclimate—cooler summers and mild winters—surrounded by mature pine and cork oak forest. The area offers residents panoramic sea and mountain views, extensive walking and mountain-bike trails, and direct access to the Santa María Golf Club.",36.52966320,-4.75500110,4.83,2025-05-29 17:15:49.118854,2025-07-11 12:42:29.649429,287,"",f
+82,neighbourhood,Bel-Air,"Bel Air,Diana Park",Estepona,"Bel-Air is a prestigious gated enclave on the western edge of Estepona, set amid mature pine and cork-oak woodlands and offering luxury villas with panoramic sea and golf-course views—all within minutes of the beach, Santa María Golf Club and the town centre, and just a 15-minute drive to Marbella and 10 minutes to Puerto Banús.",36.46601930,-5.04230540,8.21,2025-05-29 17:15:49.118854,2025-07-31 11:16:38.209177,77,"",f

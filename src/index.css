@@ -1,0 +1,120 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222 47% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 248 100% 50%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222 47% 11%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222 47% 11%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 20% 98%;
+    --border: 214 32% 94%;
+    --input: 214 32% 94%;
+    --ring: 248 100% 50%;
+    --success: 142 71% 45%;
+    --success-foreground: 210 20% 98%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 210 20% 98%;
+    --info: 199 89% 48%;
+    --info-foreground: 210 20% 98%;
+    --radius: 0.5rem;
+    --shadow-apple: 0 2px 20px -2px rgba(0, 0, 0, 0.04), 0 10px 40px -10px rgba(0, 0, 0, 0.03);
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 0 0% 35%;
+    --sidebar-primary: 0 0% 20%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 96%;
+    --sidebar-accent-foreground: 0 0% 20%;
+    --sidebar-border: 0 0% 92%;
+    --sidebar-ring: 0 0% 80%;
+  }
+
+  .dark {
+    --background: 222 47% 11%;
+    --foreground: 210 20% 98%;
+    --card: 222 47% 14%;
+    --card-foreground: 210 20% 98%;
+    --popover: 222 47% 14%;
+    --popover-foreground: 210 20% 98%;
+    --primary: 248 100% 65%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 20% 98%;
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 217 33% 17%;
+    --accent-foreground: 210 20% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 20% 98%;
+    --border: 217 33% 22%;
+    --input: 217 33% 22%;
+    --ring: 248 100% 65%;
+    --success: 142 71% 45%;
+    --success-foreground: 210 20% 98%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 222 47% 11%;
+    --info: 199 89% 48%;
+    --info-foreground: 210 20% 98%;
+    --sidebar-background: 222 47% 11%;
+    --sidebar-foreground: 210 20% 98%;
+    --sidebar-primary: 248 100% 65%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 217 33% 17%;
+    --sidebar-accent-foreground: 210 20% 98%;
+    --sidebar-border: 217 33% 22%;
+    --sidebar-ring: 248 100% 65%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-inter font-normal;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-work-sans font-medium;
+  }
+
+  .font-bold {
+    font-weight: 500 !important;
+  }
+
+  .font-semibold {
+    font-weight: 500 !important;
+  }
+
+  /* Compulsory removal of shadows on tables as requested */
+  table,
+  thead,
+  tbody,
+  tr,
+  th,
+  td {
+    box-shadow: none !important;
+  }
+}
