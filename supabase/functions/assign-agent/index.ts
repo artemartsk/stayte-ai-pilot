@@ -80,10 +80,29 @@ Deno.serve(async (req) => {
             .maybeSingle()
 
         // 3. Fetch available agents with their profiles
+        // 3. Fetch available agents via memberships (source of truth for agency-agent relation)
+        const { data: members, error: membersError } = await supabase
+            .from('memberships')
+            .select('user_id')
+            .eq('agency_id', agency_id)
+            .eq('role', 'agent') // optional: filter by role if needed, or check profiles later
+
+        if (membersError) {
+            console.error('Error fetching members:', membersError)
+            return new Response(JSON.stringify({ error: 'Failed to fetch agency members' }), { status: 500, headers: corsHeaders })
+        }
+
+        const memberIds = members?.map(m => m.user_id) || []
+
+        if (memberIds.length === 0) {
+            console.log('No members found for agency')
+            return new Response(JSON.stringify({ error: 'No agents found in agency' }), { status: 404, headers: corsHeaders })
+        }
+
         const { data: agents, error: agentsError } = await supabase
             .from('profiles')
-            .select('id, full_name, languages, specializations, experience_years, target_segments, max_active_leads, available_for_assignment')
-            .eq('agency_id', agency_id)
+            .select('id, full_name, languages, specializations, experience_years, bio, target_segments, max_active_leads, available_for_assignment')
+            .in('id', memberIds)
             .eq('available_for_assignment', true)
 
         if (agentsError || !agents || agents.length === 0) {
@@ -290,7 +309,8 @@ Return a JSON object with the selected_agent_id.`
             deal_id,
             assigned_agent_id: selectedAgentId,
             assigned_agent_name: assignedAgent?.full_name,
-            strategy
+            strategy,
+            candidates: availableAgents.map(a => ({ id: a.id, name: a.full_name, languages: a.languages, active: a.active_leads_count, max: a.max_active_leads }))
         }), {
             headers: { ...corsHeaders, 'Content-Type': 'application/json' }
         })
