@@ -59,7 +59,7 @@ Deno.serve(async (req) => {
             .from('deals')
             .select(`
                 id, segment, budget_max, type, contact_id,
-                contacts!inner(id, name, email, phone)
+                contacts!inner(id, first_name, last_name, primary_email, primary_phone)
             `)
             .eq('id', deal_id)
             .single()
@@ -272,8 +272,7 @@ Return a JSON object with the selected_agent_id.`
         const { error: contactUpdateError } = await supabase
             .from('contacts')
             .update({
-                owner: selectedAgentId,
-                current_status: 'assigned'
+                owner: selectedAgentId
             })
             .eq('id', deal.contact_id)
 

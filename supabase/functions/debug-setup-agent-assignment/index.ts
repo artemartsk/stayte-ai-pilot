@@ -28,30 +28,40 @@ Deno.serve(async (req) => {
             .eq('agency_id', agencyId)
 
         // We need an agent with Swedish
-        let agentSwedish: any = existingAgents?.find((a: any) => a.full_name?.includes('Swedish'))
+        // 1. Try to find EXISTING agent with Swedish in languages
+        let agentSwedish: any = existingAgents?.find((a: any) =>
+            a.languages && Array.isArray(a.languages) && a.languages.some((l: string) => l.toLowerCase() === 'swedish')
+        )
 
+        // 2. If no real agent found, look for our test agent "Sven Swedish" or create one
         if (!agentSwedish) {
-            const { data, error } = await supabase.auth.admin.createUser({
-                email: `agent.swedish.${Date.now()}@example.com`,
-                password: 'password123',
-                email_confirm: true,
-                user_metadata: { full_name: 'Sven Swedish' }
-            })
-            if (error) throw error
-            const { data: profile, error: profileError } = await supabase.from('profiles').insert({
-                id: data.user.id,
-                agency_id: agencyId,
-                full_name: 'Sven Swedish',
-                languages: ['Swedish'],
-                available_for_assignment: true,
-                max_active_leads: 50
-            }).select().single()
-            if (profileError || !profile) throw new Error('Failed to create Swedish agent profile')
-            agentSwedish = profile
-            await supabase.from('memberships').insert({ user_id: data.user.id, agency_id: agencyId, role: 'agent' })
-        } else {
-            await supabase.from('profiles').update({ languages: ['Swedish'], available_for_assignment: true }).eq('id', agentSwedish.id)
-            agentSwedish.languages = ['Swedish']
+            console.log('[DEBUG] No existing Swedish-speaking agent found. Checking for test agent...')
+            agentSwedish = existingAgents?.find((a: any) => a.full_name?.includes('Swedish'))
+
+            if (!agentSwedish) {
+                console.log('[DEBUG] Creating test agent "Sven Swedish"...')
+                const { data, error } = await supabase.auth.admin.createUser({
+                    email: `agent.swedish.${Date.now()}@example.com`,
+                    password: 'password123',
+                    email_confirm: true,
+                    user_metadata: { full_name: 'Sven Swedish' }
+                })
+                if (error) throw error
+                const { data: profile, error: profileError } = await supabase.from('profiles').insert({
+                    id: data.user.id,
+                    agency_id: agencyId,
+                    full_name: 'Sven Swedish',
+                    languages: ['Swedish'],
+                    available_for_assignment: true,
+                    max_active_leads: 50
+                }).select().single()
+                if (profileError || !profile) throw new Error('Failed to create Swedish agent profile')
+                agentSwedish = profile
+                await supabase.from('memberships').insert({ user_id: data.user.id, agency_id: agencyId, role: 'agent' })
+            } else {
+                await supabase.from('profiles').update({ languages: ['Swedish'], available_for_assignment: true }).eq('id', agentSwedish.id)
+                agentSwedish.languages = ['Swedish']
+            }
         }
 
         console.log(`[DEBUG] Agent Ready: ${agentSwedish.full_name} (Swedish)`)
