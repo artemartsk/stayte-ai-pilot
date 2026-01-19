@@ -42,7 +42,7 @@ function AppSidebar() {
   const { open, toggleSidebar } = useSidebar();
 
   const navigation = [
-    { name: "Dashboard", href: "/", icon: LayoutDashboard },
+    { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
     { name: "Leads", href: "/contacts", icon: Users },
     { name: "Properties", href: "/properties", icon: Building2 },
     { name: "My Agents", href: "/agents", icon: UserCog },

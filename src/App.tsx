@@ -18,6 +18,7 @@ import AgentsDashboard from "./pages/AgentsDashboard";
 import Integrations from "./pages/Integrations";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
+import Index from "./pages/Index";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -38,8 +39,9 @@ function App() {
             <Sonner />
             <Routes>
               <Route path="/login" element={<Login />} />
+              <Route path="/" element={<Index />} />
               <Route element={<Layout />}>
-                <Route path="/" element={<Dashboard />} />
+                <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/contacts" element={<Contacts />} />
                 <Route path="/contacts/:id" element={<ContactDetail />} />
                 <Route path="/properties" element={<Properties />} />
