@@ -1,4 +1,5 @@
 import { Pricing } from '@/components/ui/pricing-section-with-comparison';
+import { HeroHeader } from '@/components/HeroHeader';
 
 const pricingData = {
   plans: [
@@ -117,5 +118,12 @@ const pricingData = {
 };
 
 export default function PricingPage() {
-  return <Pricing data={pricingData} highlightFirstClientOffer />;
+  return (
+    <>
+      <HeroHeader />
+      <div className="pt-24">
+        <Pricing data={pricingData} highlightFirstClientOffer />
+      </div>
+    </>
+  );
 }
