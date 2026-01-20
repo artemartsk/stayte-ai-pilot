@@ -292,12 +292,13 @@ Deno.serve(async (req) => {
                     if (hasReplied) {
                         console.log(`WhatsApp Reply Received for run ${run.id}. Continuing Green path.`);
                         success = true;
-                        actionResult = { message: 'Replied' };
+                        // Use spread first, THEN overwrite status and message to ensure they aren't clobbered
+                        actionResult = { ...run.context[currentNode.id], status: 'replied', message: 'Replied' };
                     } else {
                         // We are here due to Timeout (Cron triggered it after next_run_at passed)
                         console.log(`WhatsApp Wait Timeout for run ${run.id}. Continuing Red path.`);
                         success = false;
-                        actionResult = { message: 'Timeout: No Reply' };
+                        actionResult = { message: 'Timeout: No Reply', ...run.context[currentNode.id] };
                     }
                 } else {
                     // First time executing this node
