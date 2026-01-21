@@ -201,8 +201,8 @@ Deno.serve(async (req) => {
         // Debug: Fetch all groups to see why assignment failed
         const { data: groups } = await supabase.from('contact_groups').select('id, name, filter_criteria');
 
-        // Debug: Fetch preferences
-        const { data: prefs } = await supabase.from('deal_preference_profiles').select('*').eq('deal_id', deal.id).single();
+        // Debug: Preferences are now directly in the deal object (merged schema)
+        const prefs = finalDeal;
 
         // JS Matcher Logic for debugging
         const jsMatches = groups?.map(group => {

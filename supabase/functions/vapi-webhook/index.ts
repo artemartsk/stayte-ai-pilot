@@ -138,11 +138,9 @@ serve(async (req) => {
                             }
 
                             if (Object.keys(prefUpdates).length > 0) {
-                                await supabase.from('deal_preference_profiles').upsert({
-                                    deal_id: dealId,
-                                    ...prefUpdates
-                                }, { onConflict: 'deal_id' })
-                                console.log('Updated deal preferences for deal', dealId)
+                                // Preferences are now stored directly in deals table
+                                await supabase.from('deals').update(prefUpdates).eq('id', dealId)
+                                console.log('Updated deal preferences in deals table for deal', dealId)
                             }
                         }
                     }

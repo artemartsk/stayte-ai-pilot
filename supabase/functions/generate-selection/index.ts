@@ -25,13 +25,12 @@ Deno.serve(async (req) => {
 
         console.log(`Generating selection for deal ${deal_id}`)
 
-        // 1. Fetch Deal & Preferences
+        // 1. Fetch Deal (preferences are now merged into deals table)
         const { data: deal, error: dealError } = await supabaseClient
             .from('deals')
             .select(`
         *,
-        contact:contacts(*),
-        preferences:deal_preference_profiles(*)
+        contact:contacts(*)
       `)
             .eq('id', deal_id)
             .single()
@@ -54,7 +53,8 @@ Deno.serve(async (req) => {
         console.log(`Found ${excludedPropertyIds.size} previously sent properties to exclude`)
 
         // 3. Build Query for Candidate Properties
-        const preferences = deal.preferences?.[0] || {} // Assuming 1:1 or taking first
+        // Preferences are now directly in the deal object (merged schema)
+        const preferences = deal
         const budget = preferences.max_budget || deal.budget_max || 10000000
         const minBedrooms = preferences.bedrooms || 0
         const requestedCity = preferences.city
