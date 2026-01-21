@@ -9,7 +9,7 @@ import { supabase } from '@/integrations/supabase/client';
 
 const Integrations = () => {
     const { user } = useAuth();
-    const inboundEmail = `${user?.agency_id}@leads.stayte-ai.com`;
+    const inboundEmail = `${user?.agency_id}@leads.stayte.ai`;
     const [copied, setCopied] = React.useState(false);
 
     const copyToClipboard = (text: string) => {
