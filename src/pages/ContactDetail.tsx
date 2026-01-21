@@ -162,19 +162,7 @@ const ContactDetail = () => {
     enabled: !!id,
   });
 
-  const { data: dealPreferences = {} } = useQuery({
-    queryKey: ['deal-preferences', deals.map(d => d.id)],
-    queryFn: async () => {
-      if (deals.length === 0) return {};
-      const dealIds = deals.map(d => d.id);
-      const { data, error } = await supabase.from('deal_preference_profiles').select('*').in('deal_id', dealIds);
-      if (error) throw error;
-      const preferencesMap: Record<string, any> = {};
-      (data || []).forEach(pref => { preferencesMap[pref.deal_id] = pref; });
-      return preferencesMap;
-    },
-    enabled: deals.length > 0,
-  });
+  // deal_preference_profiles has been merged into deals table, no separate query needed
 
   const { data: availableGroups = [] } = useQuery({
     queryKey: ['contact-groups', user?.agency_id],
@@ -767,14 +755,14 @@ const ContactDetail = () => {
           <TabsContent value="deals" className="animate-in fade-in-50 duration-300">
             <div className="grid grid-cols-1 gap-6 w-full">
               {deals.length > 0 ? deals.map((deal) => {
-                const prefs = dealPreferences[deal.id] || {};
+                // Preferences are now directly in the deal object (merged schema)
                 return (
                   <DealCard
                     key={deal.id}
                     deal={deal}
-                    preferences={prefs}
+                    preferences={deal}
                     members={members}
-                    onEdit={() => setEditingDeal({ deal, prefs })}
+                    onEdit={() => setEditingDeal({ deal, prefs: deal })}
                   />
                 );
               }) : (

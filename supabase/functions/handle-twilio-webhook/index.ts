@@ -206,146 +206,86 @@ async function handleAiConversation(supabase: any, contact: any, userMessage: st
 
         // EXTRACTION LOGIC
         if (options.extractInsights) {
-            console.log('Performing AI Insight extraction...')
-            const extractionPrompt = `Analyze the conversation history and extract structured info about the client's real estate preferences and personal details.
-            Return ONLY a FLAT JSON object with the keys listed below. Do NOT nest objects.
-            
-            Property & Deal Preferences:
-            - budget (numeric value only)
-            - max_budget (numeric value only)
-            - bedrooms (numeric)
-            - bathrooms (numeric)
-            - city (string)
-            - region (string)
-            - country (string, default "Spain")
-            - timeline (string, e.g., "ASAP", "2 months" - when they want to close the deal)
-            - type_apartment (boolean)
-            - type_villa (boolean)
-            
-            Personal info (Contact):
-            - nationality (string)
-            - language_primary (string)
-            - summary (string, short overview of the client and their situation)
-            
-            Conversation:
-            ${chatHistory.map((m: any) => m.role + ': ' + m.content).join('\n')}
-            `
+            console.log('Performing AI Insight extraction using extract-lead-details...')
 
-            const extractRes = await fetch('https://api.openai.com/v1/chat/completions', {
-                method: 'POST',
-                headers: { 'Authorization': 'Bearer ' + openAiKey, 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    model: 'gpt-4o-mini',
-                    messages: [{ role: 'user', content: extractionPrompt }],
-                    response_format: { type: "json_object" }
-                })
-            })
+            const conversationText = chatHistory.map((m: any) => m.role + ': ' + m.content).join('\n') + `\nuser: ${userMessage}`;
 
-            const extractData = await extractRes.json()
-            let insights = JSON.parse(extractData.choices?.[0]?.message?.content || '{}')
-            console.log('Raw Extracted insights:', insights)
-
-            // Robust flattening logic
-            if (insights['Property & Deal Preferences'] || insights['Personal Info']) {
-                insights = {
-                    ...insights,
-                    ...(insights['Property & Deal Preferences'] || {}),
-                    ...(insights['Personal Info'] || {})
-                }
-            }
-
-            // Separate deal preferences from personal info
-            const dealFields = ['budget', 'max_budget', 'bedrooms', 'bathrooms', 'city', 'region', 'country', 'timeline',
-                'type_apartment', 'type_villa']
-
-            const dealUpdates: Record<string, any> = {}
-            const contactProfileUpdates: Record<string, any> = {}
-
-            if (insights.nationality) contactProfileUpdates.nationality = insights.nationality
-            if (insights.language_primary) contactProfileUpdates.language_primary = insights.language_primary
-            if (insights.summary) contactProfileUpdates.summary = insights.summary
-
-            for (const [key, val] of Object.entries(insights)) {
-                if (val === null || val === undefined || typeof val === 'object') continue
-                if (dealFields.includes(key)) {
-                    dealUpdates[key] = val
-                }
-            }
-
-            // CANONICAL MATCHING: Extract mentioned locations and features
-            let locationIds: number[] = []
-            let featureIds: string[] = []
-
+            let extractedData: any = {};
             try {
-                // Collect mentioned locations from insights
-                const mentionedLocations = [
-                    insights.city,
-                    insights.region,
-                    insights.area
-                ].filter(Boolean)
-
-                // Extract feature keywords from conversation
-                const conversationText = chatHistory.map((m: any) => m.content).join(' ').toLowerCase()
-                const featureKeywords = []
-
-                // Common feature terms to look for
-                const featurePatterns = [
-                    'gym', 'pool', 'swimming pool', 'parking', 'garage', 'garden', 'terrace',
-                    'balcony', 'jacuzzi', 'sauna', 'spa', 'lift', 'elevator', 'beach view',
-                    'sea view', 'mountain view', 'golf', 'tennis', 'padel', 'security',
-                    'fireplace', 'air conditioning', 'ac', 'heating', 'furnished', 'storage'
-                ]
-
-                for (const pattern of featurePatterns) {
-                    if (conversationText.includes(pattern)) {
-                        featureKeywords.push(pattern)
-                    }
-                }
-
-                console.log('Extracted for matching:', { mentionedLocations, featureKeywords })
-
-                // Call matching service if we have data to match
-                if (mentionedLocations.length > 0 || featureKeywords.length > 0) {
-                    const matchRes = await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/match-canonical-entities`, {
-                        method: 'POST',
-                        headers: {
-                            'Authorization': `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`,
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            locations: mentionedLocations,
-                            features: featureKeywords
-                        })
+                const extractRes = await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/extract-lead-details`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        text: conversationText,
+                        context: 'WhatsApp Conversation History'
                     })
+                });
 
-                    if (matchRes.ok) {
-                        const matchData = await matchRes.json()
-                        locationIds = matchData.matched_location_ids || []
-                        featureIds = matchData.matched_feature_keys || []
-                        console.log('Canonical matches:', { locationIds, featureIds })
-                    } else {
-                        console.error('Matching service error:', await matchRes.text())
+                if (extractRes.ok) {
+                    extractedData = await extractRes.json();
+                    console.log('[DEBUG] Extracted Data from Function:', JSON.stringify(extractedData, null, 2));
+                } else {
+                    console.error('Error invoking extract-lead-details:', await extractRes.text());
+                }
+            } catch (err) {
+                console.error('Exception invoking extract-lead-details:', err);
+            }
+
+            // 1. Persist Extracted Data
+            try {
+                // Update Contact Base Info
+                const contactUpdates: any = {}
+                if (extractedData.full_name) {
+                    const parts = extractedData.full_name.split(' ')
+                    if (parts.length > 0) contactUpdates.first_name = parts[0]
+                    if (parts.length > 1) contactUpdates.last_name = parts.slice(1).join(' ')
+                }
+                if (extractedData.email) contactUpdates.primary_email = extractedData.email
+
+                if (Object.keys(contactUpdates).length > 0) {
+                    await supabase.from('contacts').update(contactUpdates).eq('id', contact.id)
+                    console.log('Updated contact info from transcript')
+                }
+
+                // Update Contact Profile (Language, Agent, Personal Data)
+                const profileUpdate: any = { contact_id: contact.id };
+
+                if (extractedData.language) profileUpdate.language_primary = extractedData.language;
+                if (extractedData.is_agent) {
+                    profileUpdate.job_title = 'Real Estate Agent';
+                    if (extractedData.summary) profileUpdate.qualification_notes = `[AGENT DETECTED] ${extractedData.summary}`;
+                }
+                if (extractedData.agency_name) profileUpdate.company_name = extractedData.agency_name;
+
+                // Map personal details attributes
+                const personalAttributes = [
+                    'age_25_35', 'age_36_50', 'age_51_plus',
+                    'gender_male', 'gender_female',
+                    'marital_single', 'marital_couple', 'marital_with_children',
+                    'nationality', 'residence_country',
+                    'profession_it', 'profession_retired',
+                    'company_name', 'job_title', 'industry',
+                    'income_lt_50k', 'income_50k_100k', 'income_gt_100k',
+                    'funding_mortgage', 'funding_foreign_loan', 'financing_method',
+                    'visited_location_before', 'hobby', 'owns_property_elsewhere',
+                    'trip_planned'
+                ];
+
+                for (const attr of personalAttributes) {
+                    if (extractedData[attr] !== undefined && extractedData[attr] !== null) {
+                        profileUpdate[attr] = extractedData[attr];
                     }
                 }
-            } catch (matchErr) {
-                console.error('Error in canonical matching:', matchErr)
-                // Continue without matching - don't block the extraction
-            }
 
-            // 1. Update Contact Profile (Personal Info)
-            if (Object.keys(contactProfileUpdates).length > 0) {
-                const { error: profileError } = await supabase
-                    .from('contact_profiles')
-                    .update(contactProfileUpdates)
-                    .eq('contact_id', contact.id)
+                if (Object.keys(profileUpdate).length > 1) {
+                    console.log(`Updating contact profile with extra info:`, profileUpdate);
+                    await supabase.from('contact_profiles').upsert(profileUpdate, { onConflict: 'contact_id' });
+                }
 
-                if (profileError) console.error('Error updating contact_profile:', profileError)
-                else console.log('Contact Profile updated:', contactProfileUpdates)
-            }
-
-            // 2. Update Deal Preferences
-            if (Object.keys(dealUpdates).length > 0) {
-                // Find existing deal
+                // Update Deal Preferences
                 const { data: deals } = await supabase
                     .from('deals')
                     .select('id')
@@ -372,39 +312,68 @@ async function handleAiConversation(supabase: any, contact: any, userMessage: st
                 }
 
                 if (dealId) {
-                    // 1. Update main deal table (budget_min/max + areas) for better compatibility with existing UI
-                    const mainDealUpdates: Record<string, any> = {
+                    // Now all preference data goes directly into the deals table
+                    const allowedDealKeys = [
+                        'max_budget', 'budget', 'bedrooms', 'bathrooms', 'size_sq_m', 'city', 'area', 'country', 'region',
+                        'loc_coast', 'loc_city_center', 'loc_suburbs', 'loc_rural',
+                        'dist_beach_lt_1km', 'dist_golf_lt_2km',
+                        'type_apartment', 'type_villa', 'type_townhouse', 'type_land_plot',
+                        'subtype_penthouse', 'subtype_duplex', 'subtype_detached_villa', 'subtype_finca_cortijo',
+                        'subtype_ground_floor_apartment', 'subtype_ground_floor_studio', 'subtype_middle_floor_apartment',
+                        'subtype_middle_floor_studio', 'subtype_top_floor_apartment', 'subtype_top_floor_studio',
+                        'group_subtype_apartment', 'group_subtype_detached', 'group_subtype_duplex', 'group_subtype_townhouse',
+                        'location_type_beachside', 'location_type_close_to_forest', 'location_type_close_to_golf',
+                        'location_type_close_to_marina', 'location_type_close_to_schools', 'location_type_close_to_sea',
+                        'location_type_close_to_town', 'location_type_country', 'location_type_suburban',
+                        'location_type_town', 'location_type_urbanisation',
+                        'feature_pool', 'feature_private_pool', 'feature_garden', 'feature_terrace', 'feature_garage',
+                        'feature_private_parking', 'feature_sea_view', 'feature_mountain_view', 'feature_gated_community',
+                        'feature_gym', 'feature_lift', 'feature_fitted_wardrobes', 'feature_air_conditioning',
+                        'feature_access_for_reduced_mobility', 'feature_balcony', 'feature_barbeque', 'feature_bar_restaurant',
+                        'feature_basement', 'feature_children_playground', 'feature_cinema', 'feature_concierge_service',
+                        'feature_courtesy_bus', 'feature_covered_terrace', 'feature_coworking_area', 'feature_dedicated_workspace',
+                        'feature_domotics', 'feature_double_glazing', 'feature_ensuite_bathroom', 'feature_ev_charger',
+                        'feature_guest_house', 'feature_jacuzzi', 'feature_marble_flooring', 'feature_padel_court_tennis_court',
+                        'feature_sauna', 'feature_solarium', 'feature_spa', 'feature_storage_room',
+                        'parking_covered', 'parking_garage', 'parking_gated', 'parking_underground',
+                        'pool_childrens_pool', 'pool_communal', 'pool_heated', 'pool_indoor', 'pool_private',
+                        'security_24_hour_security', 'security_alarm_system', 'security_electric_blinds', 'security_gated_complex',
+                        'condition_new_build', 'condition_resale', 'condition_renovation_ok', 'condition_recently_renovated',
+                        'condition_recently_refurbished', 'condition_excellent', 'build_type_new', 'build_type_secondhand',
+                        'completion_type_construction', 'completion_type_ready',
+                        'climate_control_air_conditioning', 'fireplace',
+                        'main_home', 'second_home', 'want_short_term_rental', 'want_long_term_rental', 'timeline'
+                    ];
+
+                    const dealUpdate: any = {
                         updated_at: new Date().toISOString()
                     }
-                    if (dealUpdates.budget) mainDealUpdates.budget_min = dealUpdates.budget
-                    if (dealUpdates.max_budget) mainDealUpdates.budget_max = dealUpdates.max_budget
-
-                    if (dealUpdates.city) {
-                        // Optionally merge with existing areas if you want to keep them
-                        mainDealUpdates.areas = [dealUpdates.city]
+                    for (const key of allowedDealKeys) {
+                        if (extractedData[key] !== undefined && extractedData[key] !== null) {
+                            dealUpdate[key] = extractedData[key];
+                        }
                     }
+                    if (extractedData.purchace_timeframe) dealUpdate.timeline = extractedData.purchace_timeframe;
 
-                    const { error: mainDealError } = await supabase
-                        .from('deals')
-                        .update(mainDealUpdates)
-                        .eq('id', dealId)
+                    // Map budget for display
+                    if (extractedData.budget) dealUpdate.budget_min = extractedData.budget;
+                    if (extractedData.max_budget) dealUpdate.budget_max = extractedData.max_budget;
+                    if (extractedData.city) dealUpdate.areas = [extractedData.city];
 
-                    if (mainDealError) console.error('Error updating main deal:', mainDealError)
-                    else console.log('Main deal synced with budget and city:', mainDealUpdates)
+                    // AI summary
+                    dealUpdate.ai_summary = extractedData.summary || `Extracted from WA: Budget ${dealUpdate.budget || '?'}`;
 
-                    // 2. Upsert deal_preference_profiles
-                    const { error: prefError } = await supabase
-                        .from('deal_preference_profiles')
-                        .upsert({
-                            deal_id: dealId,
-                            ...dealUpdates,
-                            location_ids: locationIds.length > 0 ? locationIds : null,
-                            feature_ids: featureIds.length > 0 ? featureIds : null
-                        }, { onConflict: 'deal_id' })
-
-                    if (prefError) console.error('Error updating deal preferences:', prefError)
-                    else console.log('Deal preferences updated:', { ...dealUpdates, locationIds, featureIds })
+                    if (Object.keys(dealUpdate).length > 1) {
+                        const { error: dealError } = await supabase
+                            .from('deals')
+                            .update(dealUpdate)
+                            .eq('id', dealId)
+                        if (dealError) console.error('Error updating deals:', dealError)
+                        else console.log('[DEBUG] Updated deals table directly for deal', dealId)
+                    }
                 }
+            } catch (persistErr) {
+                console.error('Error persisting extracted data:', persistErr)
             }
         }
 
