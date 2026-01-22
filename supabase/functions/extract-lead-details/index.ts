@@ -1,12 +1,9 @@
-
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { OpenAI } from "https://deno.land/x/openai@v4.20.0/mod.ts";
+import { createClient } from 'jsr:@supabase/supabase-js@2';
 
-const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY') ?? '';
-
-const openai = new OpenAI({
-    apiKey: OPENAI_API_KEY,
-});
+const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY') ?? '';
+const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? '';
+const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
 
 const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
@@ -17,6 +14,8 @@ serve(async (req) => {
     if (req.method === 'OPTIONS') {
         return new Response(null, { headers: corsHeaders })
     }
+
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     try {
         const { text, context } = await req.json();
@@ -29,6 +28,30 @@ serve(async (req) => {
         }
 
         console.log(`Analyzing text (${text.length} chars) with context: ${context || 'none'}`);
+
+        // Fetch reference data from database
+        const { data: locations, error: locError } = await supabase
+            .from('locations')
+            .select('id, name');
+
+        if (locError) console.error('Error fetching locations:', locError);
+
+        const { data: features, error: featError } = await supabase
+            .from('features')
+            .select('key, name');
+
+        if (featError) console.error('Error fetching features:', featError);
+
+        // Build reference lists for the prompt
+        const locationList = (locations || [])
+            .map((l: any) => `ID:${l.id} = "${l.name}"`)
+            .join('\n');
+
+        const featureList = (features || [])
+            .map((f: any) => `KEY:"${f.key}" = "${f.name}"`)
+            .join('\n');
+
+        console.log(`Loaded ${locations?.length || 0} locations, ${features?.length || 0} features for matching.`);
 
         const systemPrompt = `
             You are an expert real estate lead data extractor. 
@@ -44,6 +67,7 @@ serve(async (req) => {
             - summary (string, brief summary of the request)
             - is_agent (boolean): True if sender is a real estate agent/broker (look for 'collaborate', 'share commission', 'my client', 'inmobiliaria')
             - agency_name (string): Name of the agency if sender is an agent
+            - portal (string): The ORIGIN platform/website. CRITICAL: If this is a forwarded email, look for "De: Idealista", "From: Fotocasa", "via Idealista", etc. in the body. Examples: Idealista, Fotocasa, Kyero, Rightmove, JamesEdition. Default to null if specific portal not found.
 
             PERSONAL DETAILS (Demographics, Job, Income):
             - age_25_35 (boolean)
@@ -204,21 +228,58 @@ serve(async (req) => {
             - second_home (boolean): For vacation only (few months per year)
             - want_short_term_rental (boolean): Client wants to earn from short term rent
             - want_long_term_rental (boolean): Client wants to earn from long term rent
+
+            ========== CANONICAL LOCATION IDs ==========
+            Match any mentioned locations (cities, areas, regions) to the IDs below. Return as "location_ids" (array of integers).
+            
+${locationList}
+
+            ========== CANONICAL FEATURE KEYs ==========
+            Match any mentioned features to the KEYs below. Return as "feature_ids" (array of strings).
+            
+${featureList}
+
+            IMPORTANT RULES FOR IDs:
+            1. location_ids: Array of INTEGER IDs from the location list above. Match by name or alias.
+            2. feature_ids: Array of STRING keys from the feature list above. Match by name or alias.
+            3. If no match found, return empty arrays: "location_ids": [], "feature_ids": []
             
             Infer boolean constraints only if explicitly mentioned or strongly implied.
             Language detection should be based on the text language.
+            
+            RESPOND WITH ONLY VALID JSON. NO MARKDOWN, NO EXPLANATIONS.
         `;
 
-        const completion = await openai.chat.completions.create({
-            model: "gpt-4.1",
-            messages: [
-                { role: "system", content: systemPrompt },
-                { role: "user", content: `Context: ${context || ''}\n\nText to Analyze:\n${text}` }
-            ],
-            response_format: { type: "json_object" }
-        });
+        const userMessage = `Context: ${context || ''}\n\nText to Analyze:\n${text}`;
 
-        const result = JSON.parse(completion.choices[0].message.content || '{}');
+        // Call Gemini API
+        const geminiResponse = await fetch(
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-preview:generateContent?key=${GEMINI_API_KEY}`,
+            {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [
+                        { role: 'user', parts: [{ text: systemPrompt + '\n\n' + userMessage }] }
+                    ],
+                    generationConfig: {
+                        responseMimeType: 'application/json'
+                    }
+                })
+            }
+        );
+
+        if (!geminiResponse.ok) {
+            const errorText = await geminiResponse.text();
+            console.error('Gemini API error:', errorText);
+            throw new Error(`Gemini API error: ${geminiResponse.status}`);
+        }
+
+        const geminiData = await geminiResponse.json();
+        console.log('Gemini raw response:', JSON.stringify(geminiData).substring(0, 500));
+
+        const responseText = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+        const result = JSON.parse(responseText);
 
         // Post-processing: Apply Business Logic
         // If we extracted a specific property price as 'budget', assume Max Budget is +30% higher
@@ -231,13 +292,13 @@ serve(async (req) => {
             console.log(`Applied +30% rule (overwrite): Budget ${result.budget} -> Max Budget ${result.max_budget}`);
         }
 
-        console.log('Extraction complete');
+        console.log('Extraction complete. location_ids:', result.location_ids, 'feature_ids:', result.feature_ids);
 
         return new Response(JSON.stringify(result), {
             headers: { ...corsHeaders, 'Content-Type': 'application/json' }
         });
 
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error in extract-lead-details:', error);
         return new Response(JSON.stringify({ error: error.message }), {
             status: 500,

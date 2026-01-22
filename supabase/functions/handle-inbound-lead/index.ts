@@ -136,6 +136,7 @@ Deno.serve(async (req) => {
             }
 
             console.log('Extracted Data:', JSON.stringify(parsedData));
+            console.log('DEBUG: Parsed Portal:', parsedData.portal);
             leadData = { ...leadData, ...parsedData };
 
             // Map new extraction fields to old leadData expectations where they differ slightly
@@ -144,7 +145,9 @@ Deno.serve(async (req) => {
             if (!leadData.budget_max && parsedData.budget) leadData.budget_max = parsedData.budget;
             if (!leadData.budget_min && parsedData.min_budget) leadData.budget_min = parsedData.min_budget;
             if (!leadData.bedrooms_min && parsedData.bedrooms) leadData.bedrooms_min = parsedData.bedrooms;
+            if (!leadData.bedrooms_min && parsedData.bedrooms) leadData.bedrooms_min = parsedData.bedrooms;
             if (!leadData.bathrooms_min && parsedData.bathrooms) leadData.bathrooms_min = parsedData.bathrooms;
+            if (!leadData.portal && parsedData.portal) leadData.portal = parsedData.portal;
 
             // Flatten features object to array if needed or keep using boolean flags directly in updatePayload
             // The extract-lead-details returns booleans like feature_pool=true. 
@@ -310,6 +313,14 @@ Deno.serve(async (req) => {
             // AI summary and hot lead indicator
             if (leadData.summary) dealUpdate.ai_summary = leadData.summary;
             dealUpdate.ai_hot = true;
+
+            // Canonical IDs from reference tables
+            if (leadData.location_ids && Array.isArray(leadData.location_ids) && leadData.location_ids.length > 0) {
+                dealUpdate.location_ids = leadData.location_ids;
+            }
+            if (leadData.feature_ids && Array.isArray(leadData.feature_ids) && leadData.feature_ids.length > 0) {
+                dealUpdate.feature_ids = leadData.feature_ids;
+            }
 
             console.log('Updating deals table directly with:', JSON.stringify(dealUpdate));
 
