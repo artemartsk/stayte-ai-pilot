@@ -57,7 +57,8 @@ serve(async (req) => {
             You are an expert real estate lead data extractor. 
             Analyze the provided text (email, call transcript, or message) and extract structured data.
             
-            Return a SINGLE JSON object with the following fields (use null if missing or not applicable).
+            Return a SINGLE FLAT JSON object with the following fields (use null if missing or not applicable).
+            DO NOT NEST fields under categories. All fields must be at the root level of the JSON object.
             
             CONTACT INFO:
             - full_name (string)
