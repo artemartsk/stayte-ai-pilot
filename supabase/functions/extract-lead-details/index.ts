@@ -62,13 +62,13 @@ serve(async (req) => {
             
             CONTACT INFO:
             - full_name (string)
-            - email (string)
+            - email (string): The LEAD'S email address. CRITICAL: If this is a forwarded email, do NOT use the sender's email. Look for the original sender's email in the body text (e.g. "From: <email>", "Email: <email>", or "Reply-To: <email>").
             - phone (string)
             - language (string, ISO code e.g. 'es', 'en')
             - summary (string, brief summary of the request)
             - is_agent (boolean): True if sender is a real estate agent/broker (look for 'collaborate', 'share commission', 'my client', 'inmobiliaria')
             - agency_name (string): Name of the agency if sender is an agent
-            - portal (string): The ORIGIN platform/website. CRITICAL: If this is a forwarded email, look for "De: Idealista", "From: Fotocasa", "via Idealista", etc. in the body. Examples: Idealista, Fotocasa, Kyero, Rightmove, JamesEdition. IF NO SPECIFIC PORTAL IS FOUND, RETURN "email".
+            - portal (string): The ORIGIN platform/website. CRITICAL: If this is a forwarded email, look for "De: Idealista", "From: Fotocasa", "via Idealista", etc. in the body. Examples: Idealista, Fotocasa, Kyero, Rightmove, JamesEdition. IF NO SPECIFIC PORTAL IS FOUND, RETURN "Email".
 
             PERSONAL DETAILS (Demographics, Job, Income):
             - age_25_35 (boolean)
