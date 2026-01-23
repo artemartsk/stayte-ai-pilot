@@ -25,6 +25,7 @@ import { toast } from 'sonner';
 import { DealCard } from '../components/DealCard.tsx';
 import { DealEditDialog } from '@/components/deals/DealEditDialog';
 import { ChatHistory } from '@/components/chat/ChatHistory';
+import { AIActionsTab } from '@/components/contacts/AIActionsTab';
 
 const AudioPlayer = ({ src }: { src?: string }) => {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -586,6 +587,12 @@ const ContactDetail = () => {
               Deals <span className="ml-2 text-xs text-muted-foreground bg-muted px-1.5 py-0.5 rounded-full">{deals.length}</span>
             </TabsTrigger>
             <TabsTrigger
+              value="ai-actions"
+              className="bg-transparent border-b-2 border-transparent data-[state=active]:border-foreground data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-none px-0 py-2.5 font-normal text-muted-foreground data-[state=active]:text-foreground"
+            >
+              AI Actions
+            </TabsTrigger>
+            <TabsTrigger
               value="selections"
               className="bg-transparent border-b-2 border-transparent data-[state=active]:border-foreground data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-none px-0 py-2.5 font-normal text-muted-foreground data-[state=active]:text-foreground"
             >
@@ -780,6 +787,10 @@ const ContactDetail = () => {
                 contactId={id || ''}
               />
             )}
+          </TabsContent>
+
+          <TabsContent value="ai-actions" className="animate-in fade-in-50 duration-300">
+            <AIActionsTab contactId={id || ''} dealIds={deals.map(d => d.id)} />
           </TabsContent>
 
           <TabsContent value="selections" className="animate-in fade-in-50 duration-300">
