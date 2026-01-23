@@ -68,7 +68,7 @@ const Contacts = () => {
         .select(`
           *,
           contact_group:contact_groups(id, name, color),
-          deals:deals!deals_contact_id_fkey(id, status, created_at, budget_max, ai_hot_score, areas, type),
+          deals:deals!deals_contact_id_fkey(id, status, created_at, budget_max, areas, type),
           owner:profiles!contacts_owner_fkey(id, full_name)
         `)
         .eq('agency_id', user.agency_id);

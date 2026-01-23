@@ -113,11 +113,7 @@ export const DealsBoard = ({ deals, members, pipeline, isLoading }: DealsBoardPr
                                             <Badge variant="outline" className="text-[10px] px-1 py-0 h-5">
                                                 {deal.type}
                                             </Badge>
-                                            {deal.ai_hot && (
-                                                <span className="text-[10px] font-bold text-red-500 flex items-center gap-0.5">
-                                                    🔥 {deal.ai_hot_score}
-                                                </span>
-                                            )}
+
                                         </div>
                                         <CardTitle className="text-sm font-medium leading-tight">
                                             {getClientName(deal)}

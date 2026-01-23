@@ -101,7 +101,7 @@ export function ContactsKanban({ contacts }: ContactsKanbanProps) {
                                         : null;
 
                                     // Real data mapping from latest deal
-                                    const score = latestDeal?.ai_hot_score || 0;
+                                    const score = 0;
                                     const intent = latestDeal?.type || null;
 
                                     // Budget

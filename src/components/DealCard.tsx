@@ -53,11 +53,7 @@ export const DealCard = ({ deal, preferences, members = [], onEdit }: DealCardPr
           <div className="flex items-center gap-2.5">
             <Badge variant="outline" className="rounded-md font-normal text-muted-foreground border-border/60">Buy</Badge>
             <StatusBadge status={deal.status} />
-            {deal.ai_hot && (
-              <Badge variant="secondary" className="rounded-md bg-amber-50 text-amber-700 hover:bg-amber-100 border-amber-100/50 flex items-center gap-1 font-normal">
-                <Sparkles className="h-3 w-3" /> Hot Lead
-              </Badge>
-            )}
+
             {deal.nurture_enabled && (
               <Badge variant="secondary" className="rounded-md bg-purple-50 text-purple-700 hover:bg-purple-100 border-purple-100/50 flex items-center gap-1 font-normal">
                 <Zap className="h-3 w-3" /> Nurturing On
@@ -110,31 +106,7 @@ export const DealCard = ({ deal, preferences, members = [], onEdit }: DealCardPr
           <SectionHeader icon={BrainCircuit} title="AI Analysis" />
 
           <div className="space-y-4">
-            <div className="p-3 bg-muted/20 rounded-lg border border-border/30">
-              <div className="flex justify-between items-end mb-2">
-                <span className="text-xs font-medium text-muted-foreground">Fit Score</span>
-                <span className="text-sm font-semibold">{deal.ai_hot_score || 0}<span className="text-muted-foreground font-normal text-xs">/100</span></span>
-              </div>
-              <div className="h-1.5 w-full bg-secondary rounded-full overflow-hidden">
-                <div className="h-full bg-foreground rounded-full" style={{ width: `${deal.ai_hot_score || 0}%` }} />
-              </div>
-            </div>
 
-            {deal.ai_summary ? (
-              <div className="relative pl-3 border-l-2 border-primary/20">
-                <p className="text-sm leading-relaxed text-foreground/80 italic">
-                  {deal.ai_summary}
-                </p>
-              </div>
-            ) : (
-              <span className="text-sm text-muted-foreground italic">Awaiting AI analysis...</span>
-            )}
-
-            {deal.ai_hot && (
-              <div className="text-xs text-muted-foreground">
-                <span className="font-medium text-foreground">Why Hot:</span> High budget, urgent timeline.
-              </div>
-            )}
           </div>
         </div>
 
