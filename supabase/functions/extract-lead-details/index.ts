@@ -68,7 +68,7 @@ serve(async (req) => {
             - summary (string, brief summary of the request)
             - is_agent (boolean): True if sender is a real estate agent/broker (look for 'collaborate', 'share commission', 'my client', 'inmobiliaria')
             - agency_name (string): Name of the agency if sender is an agent
-            - portal (string): The ORIGIN platform/website. CRITICAL: If this is a forwarded email, look for "De: Idealista", "From: Fotocasa", "via Idealista", etc. in the body. Examples: Idealista, Fotocasa, Kyero, Rightmove, JamesEdition. Default to null if specific portal not found.
+            - portal (string): The ORIGIN platform/website. CRITICAL: If this is a forwarded email, look for "De: Idealista", "From: Fotocasa", "via Idealista", etc. in the body. Examples: Idealista, Fotocasa, Kyero, Rightmove, JamesEdition. IF NO SPECIFIC PORTAL IS FOUND, RETURN "email".
 
             PERSONAL DETAILS (Demographics, Job, Income):
             - age_25_35 (boolean)
@@ -96,7 +96,7 @@ serve(async (req) => {
             - hobby (string)
             - owns_property_elsewhere (boolean)
             - existing_property_country (string)
-            - purchace_timeframe (string): Timeframe for purchase
+            - purchase_timeframe (string): Timeframe for purchase (e.g. "ASAP", "6 months", "Visiting Feb 15-20")
             - trip_planned (string): Trip planned details or visiting availability
 
             PROPERTY PREFERENCES (Boolean fields are true/false, numeric are numbers):

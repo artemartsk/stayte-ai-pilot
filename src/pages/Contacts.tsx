@@ -67,7 +67,7 @@ const Contacts = () => {
         .from('contacts')
         .select(`
           *,
-          group:contact_groups(id, name, color),
+          contact_group:contact_groups(id, name, color),
           deals:deals!deals_contact_id_fkey(id, status, created_at, budget_max, ai_hot_score, areas, type),
           owner:profiles!contacts_owner_fkey(id, full_name)
         `)
@@ -85,7 +85,7 @@ const Contacts = () => {
       // Transform the data to include group
       return (data || []).map((contact: any) => ({
         ...contact,
-        groups: contact.group ? [contact.group] : [],
+        groups: contact.contact_group ? [contact.contact_group] : [],
       }));
     },
     enabled: !!user?.agency_id,

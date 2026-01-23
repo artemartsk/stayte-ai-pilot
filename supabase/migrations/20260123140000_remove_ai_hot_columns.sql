@@ -1,0 +1,4 @@
+ALTER TABLE deals
+DROP COLUMN IF EXISTS ai_hot,
+DROP COLUMN IF EXISTS ai_hot_score,
+DROP COLUMN IF EXISTS ai_hot_reason;

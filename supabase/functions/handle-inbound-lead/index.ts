@@ -312,14 +312,53 @@ Deno.serve(async (req) => {
 
             // AI summary and hot lead indicator
             if (leadData.summary) dealUpdate.ai_summary = leadData.summary;
-            dealUpdate.ai_hot = true;
+
 
             // Canonical IDs from reference tables
             if (leadData.location_ids && Array.isArray(leadData.location_ids) && leadData.location_ids.length > 0) {
                 dealUpdate.location_ids = leadData.location_ids;
+
+                // Resolve Location Names from DB to override text-based extraction
+                const { data: locs } = await supabase
+                    .from('locations')
+                    .select('name, type') // Assuming 'type' exists, if not we'll just use names
+                    .in('id', leadData.location_ids);
+
+                if (locs && locs.length > 0) {
+                    // Reset text fields to avoid conflict with AI text extraction
+                    dealUpdate.city = null;
+                    dealUpdate.area = null;
+                    dealUpdate.region = null;
+
+                    // Classify locations by type
+                    // "Specific" = zone, area, district, urbanisation
+                    // "Broad" = city, municipality, province
+                    const specificLocs = locs.filter((l: any) => l.type && (l.type.toLowerCase().includes('zone') || l.type.toLowerCase().includes('area') || l.type.toLowerCase().includes('district') || l.type.toLowerCase().includes('urbanisation'))).map((l: any) => l.name);
+                    const broadLocs = locs.filter((l: any) => !l.type || l.type.toLowerCase().includes('city') || l.type.toLowerCase() === 'municipality').map((l: any) => l.name);
+
+                    if (specificLocs.length > 0) {
+                        dealUpdate.city = specificLocs.join(', ');
+                        dealUpdate.area = null;
+                    } else if (broadLocs.length > 0) {
+                        dealUpdate.city = broadLocs.join(', ');
+                    } else {
+                        dealUpdate.city = locs[0].name;
+                    }
+
+                    console.log(`Resolved Canonical Locations: Main="${dealUpdate.city}" from IDs ${JSON.stringify(leadData.location_ids)}`);
+                }
             }
+
             if (leadData.feature_ids && Array.isArray(leadData.feature_ids) && leadData.feature_ids.length > 0) {
                 dealUpdate.feature_ids = leadData.feature_ids;
+            }
+
+            // Map timeframe
+            if (leadData.purchase_timeframe) {
+                dealUpdate.timeline = leadData.purchase_timeframe;
+            } else if (leadData.purchace_timeframe) {
+                // Handle legacy typo key if it still comes back from older prompts context
+                dealUpdate.timeline = leadData.purchace_timeframe;
             }
 
             console.log('Updating deals table directly with:', JSON.stringify(dealUpdate));
