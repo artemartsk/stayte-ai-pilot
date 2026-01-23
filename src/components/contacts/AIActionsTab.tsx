@@ -11,6 +11,24 @@ interface AIActionsTabProps {
 }
 
 export function AIActionsTab({ contactId, dealIds }: AIActionsTabProps) {
+    // Fetch active workflows
+    const { data: workflows, isLoading: workflowsLoading } = useQuery({
+        queryKey: ['active-workflows-tab', contactId],
+        queryFn: async () => {
+            const { data, error } = await supabase
+                .from('workflow_runs')
+                .select('*, ai_workflow_templates(name)')
+                .eq('contact_id', contactId)
+                .neq('status', 'completed')
+                .neq('status', 'failed')
+                .order('created_at', { ascending: false });
+
+            if (error) throw error;
+            return data || [];
+        },
+        enabled: !!contactId,
+    });
+
     const { data: tasks, isLoading } = useQuery({
         queryKey: ['ai-tasks-tab', contactId],
         queryFn: async () => {
@@ -28,7 +46,7 @@ export function AIActionsTab({ contactId, dealIds }: AIActionsTabProps) {
         enabled: dealIds.length > 0,
     });
 
-    if (isLoading) {
+    if (isLoading || workflowsLoading) {
         return (
             <div className="flex justify-center p-12">
                 <Loader2 className="h-5 w-5 animate-spin text-slate-300" />
@@ -36,7 +54,7 @@ export function AIActionsTab({ contactId, dealIds }: AIActionsTabProps) {
         );
     }
 
-    if (!tasks || tasks.length === 0) {
+    if ((!tasks || tasks.length === 0) && (!workflows || workflows.length === 0)) {
         return (
             <div className="flex flex-col items-center justify-center p-12 border border-dashed border-slate-200 rounded-lg bg-slate-50/50">
                 <div className="h-10 w-10 bg-slate-100 rounded-full flex items-center justify-center mb-3">
@@ -51,12 +69,12 @@ export function AIActionsTab({ contactId, dealIds }: AIActionsTabProps) {
     const now = new Date();
 
     // Group tasks
-    const planned = tasks.filter(t =>
+    const planned = (tasks || []).filter(t =>
         (t.status === 'pending' || t.status === 'queued') &&
         new Date(t.scheduled_at) > now
     ).sort((a, b) => new Date(a.scheduled_at).getTime() - new Date(b.scheduled_at).getTime());
 
-    const completed = tasks.filter(t =>
+    const completed = (tasks || []).filter(t =>
         t.status === 'done' ||
         t.status === 'failed' ||
         t.status === 'canceled' ||
@@ -89,16 +107,59 @@ export function AIActionsTab({ contactId, dealIds }: AIActionsTabProps) {
     return (
         <div className="max-w-3xl space-y-12 animate-in fade-in-50 duration-500">
 
+            {/* SECTION: ACTIVE WORKFLOWS */}
+            {workflows && workflows.length > 0 && (
+                <section>
+                    <div className="flex items-center gap-2 mb-4">
+                        <div className="h-1.5 w-1.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]"></div>
+                        <h3 className="text-xs font-semibold uppercase tracking-widest text-slate-500">Running Workflows</h3>
+                    </div>
+
+                    <div className="space-y-3">
+                        {workflows.map((run) => (
+                            <div key={run.id} className="p-4 rounded-lg bg-white border border-slate-200 shadow-sm flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                    <div className="h-9 w-9 rounded-md bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                                        <Zap className="h-4 w-4" />
+                                    </div>
+                                    <div>
+                                        <p className="text-sm font-medium text-slate-900">
+                                            {run.ai_workflow_templates?.name || 'Workflow'}
+                                        </p>
+                                        <div className="flex items-center gap-2 mt-0.5">
+                                            <span className="text-xs text-slate-500 flex items-center gap-1">
+                                                <div className="w-1 h-1 rounded-full bg-slate-400"></div>
+                                                Status: <span className="font-medium text-slate-700 uppercase">{run.status}</span>
+                                            </span>
+                                            {run.next_run_at && (
+                                                <span className="text-xs text-slate-400">
+                                                    • Next: {format(new Date(run.next_run_at), "h:mm a")}
+                                                </span>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="text-right">
+                                    <span className="inline-flex items-center rounded-full bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10 animate-pulse">
+                                        Running
+                                    </span>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+            )}
+
             {/* SECTION: PLANNED */}
             <section>
                 <div className="flex items-center gap-2 mb-4">
                     <div className="h-1.5 w-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]"></div>
-                    <h3 className="text-xs font-semibold uppercase tracking-widest text-slate-500">Planned</h3>
+                    <h3 className="text-xs font-semibold uppercase tracking-widest text-slate-500">Planned Tasks</h3>
                 </div>
 
                 {planned.length === 0 ? (
                     <div className="text-xs text-slate-400 pl-4 py-2 italic font-light">
-                        No upcoming actions scheduled.
+                        No upcoming tasks scheduled.
                     </div>
                 ) : (
                     <div className="space-y-1">
