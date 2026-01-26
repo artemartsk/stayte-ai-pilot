@@ -13,7 +13,7 @@ interface AIActionsTabProps {
 interface ActionRow {
     id: string;
     action: string;
-    status: 'completed' | 'waiting' | 'scheduled' | 'failed';
+    status: 'completed' | 'waiting' | 'scheduled' | 'failed' | 'no_answer';
     time: Date;
     isScheduled: boolean;
     details?: string;
@@ -69,16 +69,34 @@ export function AIActionsTab({ contactId, dealIds }: AIActionsTabProps) {
 
     // Add executed steps from logs
     (stepLogs || []).forEach((log: any) => {
-        const isFailed = log.status === 'failed';
-        const isWaiting = log.status === 'waiting_for_callback';
+        const status = log.status;
+        let mappedStatus: ActionRow['status'] = 'completed';
+
+        if (status === 'failed' || status === 'error') {
+            mappedStatus = 'failed';
+        } else if (status === 'waiting_for_callback') {
+            mappedStatus = 'waiting';
+        } else if (status === 'no-answer' || status === 'busy' || status === 'voicemail') {
+            mappedStatus = 'no_answer';
+        } else if (status === 'answer' || status === 'completed' || status === 'success') {
+            mappedStatus = 'completed';
+        }
+
+        // Build details string
+        let details = log.error_message;
+        if (!details && log.result?.reason) {
+            details = log.result.reason;
+        } else if (!details && log.result?.call_id) {
+            details = `Call ID: ${log.result.call_id.slice(0, 8)}...`;
+        }
 
         actionRows.push({
             id: log.id,
             action: log.action,
-            status: isFailed ? 'failed' : isWaiting ? 'waiting' : 'completed',
+            status: mappedStatus,
             time: new Date(log.executed_at || log.created_at),
             isScheduled: false,
-            details: log.error_message || (log.result?.call_id ? `Call ID: ${log.result.call_id.slice(0, 8)}...` : undefined),
+            details: details,
             source: 'log'
         });
     });
@@ -151,11 +169,13 @@ export function AIActionsTab({ contactId, dealIds }: AIActionsTabProps) {
             case 'completed':
                 return <span className="text-green-600">Completed</span>;
             case 'waiting':
-                return <span className="text-amber-600">Waiting</span>;
+                return <span className="text-amber-600">In Progress</span>;
             case 'scheduled':
                 return <span className="text-blue-600">Scheduled</span>;
             case 'failed':
                 return <span className="text-red-600">Failed</span>;
+            case 'no_answer':
+                return <span className="text-orange-600">No Answer</span>;
         }
     };
 
@@ -188,7 +208,9 @@ export function AIActionsTab({ contactId, dealIds }: AIActionsTabProps) {
                                         row.status === 'failed' ? "bg-red-50 text-red-500" :
                                             row.status === 'waiting' ? "bg-amber-50 text-amber-500" :
                                                 row.status === 'scheduled' ? "bg-blue-50 text-blue-500" :
-                                                    "bg-slate-100 text-slate-500"
+                                                    row.status === 'no_answer' ? "bg-orange-50 text-orange-500" :
+                                                        row.status === 'completed' ? "bg-green-50 text-green-500" :
+                                                            "bg-slate-100 text-slate-500"
                                     )}>
                                         <Icon className="h-3.5 w-3.5" />
                                     </div>

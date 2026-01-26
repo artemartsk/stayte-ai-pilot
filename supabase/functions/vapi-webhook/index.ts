@@ -219,6 +219,29 @@ serve(async (req) => {
                     }
                 })
                 console.log(`Logged call result to contact_communications: ${finalStatus}`)
+
+                // Update workflow_step_logs with final call result
+                // Find the log entry with waiting_for_callback status for this call
+                const { data: existingLogs } = await supabase
+                    .from('workflow_step_logs')
+                    .select('id')
+                    .eq('contact_id', contactId)
+                    .eq('status', 'waiting_for_callback')
+                    .order('created_at', { ascending: false })
+                    .limit(1)
+
+                if (existingLogs && existingLogs.length > 0) {
+                    await supabase.from('workflow_step_logs').update({
+                        status: finalStatus,
+                        result: {
+                            call_id: call.id,
+                            reason: reason,
+                            duration: call.durationSeconds,
+                            summary: analysis?.summary
+                        }
+                    }).eq('id', existingLogs[0].id)
+                    console.log(`Updated workflow_step_logs to status: ${finalStatus}`)
+                }
             }
         }
 
