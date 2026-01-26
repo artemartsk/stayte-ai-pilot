@@ -220,7 +220,7 @@ export function AIActionsTab({ contactId, dealIds }: AIActionsTabProps) {
                 )}
             </section>
 
-            {/* SECTION: STEP LOGS HISTORY */}
+            {/* SECTION: STEP LOGS HISTORY - TABLE FORMAT */}
             <section>
                 <div className="flex items-center gap-2 mb-4">
                     <div className="h-1.5 w-1.5 rounded-full bg-slate-300"></div>
@@ -232,58 +232,67 @@ export function AIActionsTab({ contactId, dealIds }: AIActionsTabProps) {
                         No execution history yet.
                     </div>
                 ) : (
-                    <div className="space-y-1">
-                        {stepLogs.map((log: any, i: number) => {
-                            const Icon = getIcon(log.action);
-                            const isFailed = log.status === 'failed';
-                            const isSuccess = log.status === 'success';
+                    <div className="border border-slate-200 rounded-lg overflow-hidden">
+                        <table className="w-full text-sm">
+                            <thead className="bg-slate-50 border-b border-slate-200">
+                                <tr>
+                                    <th className="text-left px-4 py-2.5 text-xs font-semibold text-slate-500 uppercase tracking-wide">Action</th>
+                                    <th className="text-left px-4 py-2.5 text-xs font-semibold text-slate-500 uppercase tracking-wide">Status</th>
+                                    <th className="text-left px-4 py-2.5 text-xs font-semibold text-slate-500 uppercase tracking-wide">Time</th>
+                                    <th className="text-left px-4 py-2.5 text-xs font-semibold text-slate-500 uppercase tracking-wide">Details</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-slate-100">
+                                {stepLogs.map((log: any) => {
+                                    const Icon = getIcon(log.action);
+                                    const isFailed = log.status === 'failed';
+                                    const isSuccess = log.status === 'success';
+                                    const isWaiting = log.status === 'waiting_for_callback';
 
-                            return (
-                                <div key={log.id} className="group relative flex items-center gap-4 p-3 rounded-lg hover:bg-slate-50 transition-all border border-transparent hover:border-slate-100 opacity-80 hover:opacity-100">
-                                    {/* Timeline Line */}
-                                    {i !== stepLogs.length - 1 && (
-                                        <div className="absolute left-[27px] top-10 bottom-[-14px] w-px bg-slate-100 group-hover:bg-slate-200 transition-colors"></div>
-                                    )}
-
-                                    <div className={cn(
-                                        "relative z-10 h-9 w-9 rounded-md border shadow-sm flex items-center justify-center transition-colors",
-                                        isFailed
-                                            ? "bg-red-50 border-red-100 text-red-500"
-                                            : isSuccess
-                                                ? "bg-green-50 border-green-100 text-green-600"
-                                                : "bg-slate-50 border-slate-200 text-slate-500"
-                                    )}>
-                                        {isFailed ? <XCircle className="h-4 w-4" /> : <Icon className="h-4 w-4" />}
-                                    </div>
-
-                                    <div className="flex-1 min-w-0">
-                                        <div className="flex items-center gap-2">
-                                            <span className={cn("text-sm font-medium", isFailed ? "text-red-700" : "text-slate-600")}>
-                                                {getLabel(log.action)}
-                                            </span>
-                                            <span className={cn(
-                                                "inline-flex items-center rounded-full px-1.5 py-0.5 text-[10px] font-medium ring-1 ring-inset",
-                                                isFailed ? "bg-red-50 text-red-700 ring-red-600/10" :
-                                                    isSuccess ? "bg-green-50 text-green-700 ring-green-600/10" :
-                                                        "bg-slate-100 text-slate-600 ring-slate-500/10"
-                                            )}>
-                                                {log.status}
-                                            </span>
-                                        </div>
-                                        <div className="flex items-center gap-2 mt-0.5">
-                                            <span className="text-xs text-slate-400 font-mono">
-                                                {log.executed_at ? format(new Date(log.executed_at), "MMM d, h:mm a") : '—'}
-                                            </span>
-                                            {log.error_message && (
-                                                <span className="text-[10px] text-red-500 truncate max-w-[200px]">
-                                                    • {log.error_message}
+                                    return (
+                                        <tr key={log.id} className="hover:bg-slate-50/50 transition-colors">
+                                            <td className="px-4 py-3">
+                                                <div className="flex items-center gap-2.5">
+                                                    <div className={cn(
+                                                        "h-8 w-8 rounded-md flex items-center justify-center",
+                                                        isFailed ? "bg-red-50 text-red-500" :
+                                                            isSuccess ? "bg-green-50 text-green-600" :
+                                                                isWaiting ? "bg-amber-50 text-amber-600" :
+                                                                    "bg-slate-100 text-slate-500"
+                                                    )}>
+                                                        <Icon className="h-4 w-4" />
+                                                    </div>
+                                                    <span className="font-medium text-slate-700">{getLabel(log.action)}</span>
+                                                </div>
+                                            </td>
+                                            <td className="px-4 py-3">
+                                                <span className={cn(
+                                                    "inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium",
+                                                    isFailed ? "bg-red-100 text-red-700" :
+                                                        isSuccess ? "bg-green-100 text-green-700" :
+                                                            isWaiting ? "bg-amber-100 text-amber-700" :
+                                                                "bg-slate-100 text-slate-600"
+                                                )}>
+                                                    {isWaiting ? 'Waiting' : log.status}
                                                 </span>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-                            );
-                        })}
+                                            </td>
+                                            <td className="px-4 py-3 text-slate-500 text-xs font-mono">
+                                                {log.executed_at ? format(new Date(log.executed_at), "MMM d, HH:mm") : '—'}
+                                            </td>
+                                            <td className="px-4 py-3 text-xs text-slate-400 max-w-[200px] truncate">
+                                                {log.error_message ? (
+                                                    <span className="text-red-500">{log.error_message}</span>
+                                                ) : log.result?.call_id ? (
+                                                    <span>Call ID: {log.result.call_id.slice(0, 8)}...</span>
+                                                ) : (
+                                                    '—'
+                                                )}
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
                     </div>
                 )}
             </section>

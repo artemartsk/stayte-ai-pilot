@@ -470,6 +470,23 @@ Deno.serve(async (req) => {
                 }
 
                 if (actionResult?.status === 'waiting_for_callback') {
+                    // Log step execution BEFORE continue
+                    try {
+                        await supabase.from('workflow_step_logs').insert({
+                            workflow_run_id: run.id,
+                            contact_id: contact.id,
+                            agency_id: run.agency_id,
+                            node_id: currentNode.id,
+                            action: currentNode.data.action,
+                            status: 'waiting_for_callback',
+                            result: actionResult,
+                            executed_at: new Date().toISOString()
+                        });
+                        console.log('Logged step to workflow_step_logs');
+                    } catch (logErr) {
+                        console.error('Failed to log step:', logErr);
+                    }
+
                     // Update status to waiting_for_callback and EXIT for this run
                     await supabase.from('workflow_runs').update({
                         status: 'waiting_for_callback',
