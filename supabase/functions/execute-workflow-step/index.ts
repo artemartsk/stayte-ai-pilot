@@ -543,6 +543,23 @@ Deno.serve(async (req) => {
                         .eq('id', run.id)
                 }
 
+                // Log step execution to workflow_step_logs
+                try {
+                    await supabase.from('workflow_step_logs').insert({
+                        workflow_run_id: run.id,
+                        contact_id: contact.id,
+                        agency_id: run.agency_id,
+                        node_id: currentNode.id,
+                        action: currentNode.data.action,
+                        status: success ? 'success' : 'failed',
+                        result: actionResult,
+                        error_message: actionResult?.error || null,
+                        executed_at: new Date().toISOString()
+                    });
+                } catch (logErr) {
+                    console.error('Failed to log step:', logErr);
+                }
+
                 results.push({ runId: run.id, action: currentNode.data.action, success, actionResult })
 
             } catch (stepError: any) {
@@ -613,7 +630,8 @@ async function executeCall(contact: any, agencyId: string, supabase: any, runId:
         vapiPayload.assistantOverrides = {
             variableValues: {
                 first_name: contact.first_name,
-                buyer_id: contact.id
+                buyer_id: contact.id,
+                marketing_source: contact.marketing_source || ''
             }
         }
     }

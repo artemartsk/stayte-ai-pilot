@@ -29,6 +29,23 @@ export function AIActionsTab({ contactId, dealIds }: AIActionsTabProps) {
         enabled: !!contactId,
     });
 
+    // Fetch step logs (execution history)
+    const { data: stepLogs, isLoading: stepLogsLoading } = useQuery({
+        queryKey: ['workflow-step-logs', contactId],
+        queryFn: async () => {
+            const { data, error } = await supabase
+                .from('workflow_step_logs')
+                .select('*')
+                .eq('contact_id', contactId)
+                .order('executed_at', { ascending: false })
+                .limit(50);
+
+            if (error) throw error;
+            return data || [];
+        },
+        enabled: !!contactId,
+    });
+
     const { data: tasks, isLoading } = useQuery({
         queryKey: ['ai-tasks-tab', contactId],
         queryFn: async () => {
@@ -46,7 +63,7 @@ export function AIActionsTab({ contactId, dealIds }: AIActionsTabProps) {
         enabled: dealIds.length > 0,
     });
 
-    if (isLoading || workflowsLoading) {
+    if (isLoading || workflowsLoading || stepLogsLoading) {
         return (
             <div className="flex justify-center p-12">
                 <Loader2 className="h-5 w-5 animate-spin text-slate-300" />
@@ -54,7 +71,7 @@ export function AIActionsTab({ contactId, dealIds }: AIActionsTabProps) {
         );
     }
 
-    if ((!tasks || tasks.length === 0) && (!workflows || workflows.length === 0)) {
+    if ((!tasks || tasks.length === 0) && (!workflows || workflows.length === 0) && (!stepLogs || stepLogs.length === 0)) {
         return (
             <div className="flex flex-col items-center justify-center p-12 border border-dashed border-slate-200 rounded-lg bg-slate-50/50">
                 <div className="h-10 w-10 bg-slate-100 rounded-full flex items-center justify-center mb-3">
@@ -203,27 +220,28 @@ export function AIActionsTab({ contactId, dealIds }: AIActionsTabProps) {
                 )}
             </section>
 
-            {/* SECTION: COMPLETED */}
+            {/* SECTION: STEP LOGS HISTORY */}
             <section>
                 <div className="flex items-center gap-2 mb-4">
                     <div className="h-1.5 w-1.5 rounded-full bg-slate-300"></div>
-                    <h3 className="text-xs font-semibold uppercase tracking-widest text-slate-400">History</h3>
+                    <h3 className="text-xs font-semibold uppercase tracking-widest text-slate-400">Execution History</h3>
                 </div>
 
-                {completed.length === 0 ? (
+                {(!stepLogs || stepLogs.length === 0) ? (
                     <div className="text-xs text-slate-400 pl-4 py-2 italic font-light">
-                        No history yet.
+                        No execution history yet.
                     </div>
                 ) : (
                     <div className="space-y-1">
-                        {completed.map((task, i) => {
-                            const Icon = getIcon(task.action);
-                            const isFailed = task.status === 'failed';
+                        {stepLogs.map((log: any, i: number) => {
+                            const Icon = getIcon(log.action);
+                            const isFailed = log.status === 'failed';
+                            const isSuccess = log.status === 'success';
 
                             return (
-                                <div key={task.id} className="group relative flex items-center gap-4 p-3 rounded-lg hover:bg-slate-50 transition-all border border-transparent hover:border-slate-100 opacity-80 hover:opacity-100">
+                                <div key={log.id} className="group relative flex items-center gap-4 p-3 rounded-lg hover:bg-slate-50 transition-all border border-transparent hover:border-slate-100 opacity-80 hover:opacity-100">
                                     {/* Timeline Line */}
-                                    {i !== completed.length - 1 && (
+                                    {i !== stepLogs.length - 1 && (
                                         <div className="absolute left-[27px] top-10 bottom-[-14px] w-px bg-slate-100 group-hover:bg-slate-200 transition-colors"></div>
                                     )}
 
@@ -231,34 +249,34 @@ export function AIActionsTab({ contactId, dealIds }: AIActionsTabProps) {
                                         "relative z-10 h-9 w-9 rounded-md border shadow-sm flex items-center justify-center transition-colors",
                                         isFailed
                                             ? "bg-red-50 border-red-100 text-red-500"
-                                            : "bg-slate-50 border-slate-200 text-slate-500"
+                                            : isSuccess
+                                                ? "bg-green-50 border-green-100 text-green-600"
+                                                : "bg-slate-50 border-slate-200 text-slate-500"
                                     )}>
-                                        {isFailed ? <XCircle className="h-4 w-4" /> : <CheckCircle2 className="h-4 w-4" />}
+                                        {isFailed ? <XCircle className="h-4 w-4" /> : <Icon className="h-4 w-4" />}
                                     </div>
 
                                     <div className="flex-1 min-w-0">
                                         <div className="flex items-center gap-2">
                                             <span className={cn("text-sm font-medium", isFailed ? "text-red-700" : "text-slate-600")}>
-                                                {getLabel(task.action)}
+                                                {getLabel(log.action)}
                                             </span>
-                                            {isFailed && (
-                                                <span className="inline-flex items-center rounded-full bg-red-50 px-1.5 py-0.5 text-[10px] font-medium text-red-700 ring-1 ring-inset ring-red-600/10">
-                                                    Failed
-                                                </span>
-                                            )}
-                                            {task.status === 'canceled' && (
-                                                <span className="inline-flex items-center rounded-full bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium text-slate-600 ring-1 ring-inset ring-slate-500/10">
-                                                    Canceled
-                                                </span>
-                                            )}
+                                            <span className={cn(
+                                                "inline-flex items-center rounded-full px-1.5 py-0.5 text-[10px] font-medium ring-1 ring-inset",
+                                                isFailed ? "bg-red-50 text-red-700 ring-red-600/10" :
+                                                    isSuccess ? "bg-green-50 text-green-700 ring-green-600/10" :
+                                                        "bg-slate-100 text-slate-600 ring-slate-500/10"
+                                            )}>
+                                                {log.status}
+                                            </span>
                                         </div>
                                         <div className="flex items-center gap-2 mt-0.5">
                                             <span className="text-xs text-slate-400 font-mono">
-                                                {format(new Date(task.scheduled_at), "MMM d, h:mm a")}
+                                                {log.executed_at ? format(new Date(log.executed_at), "MMM d, h:mm a") : '—'}
                                             </span>
-                                            {task.last_error && (
+                                            {log.error_message && (
                                                 <span className="text-[10px] text-red-500 truncate max-w-[200px]">
-                                                    • {task.last_error}
+                                                    • {log.error_message}
                                                 </span>
                                             )}
                                         </div>
