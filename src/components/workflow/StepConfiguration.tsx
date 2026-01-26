@@ -505,19 +505,19 @@ export const CallInput = ({ value, onChange }: CallInputProps) => {
     };
 
     return (
-        <div className="space-y-4">
-            <div className="p-4 border rounded-md bg-muted/20 space-y-2">
-                <div className="flex items-center gap-2">
-                    <p className="text-sm font-medium">Global Settings</p>
-                </div>
-                <p className="text-xs text-muted-foreground">
+        <div className="space-y-6">
+            {/* Global Settings - Notion style */}
+            <div className="space-y-1">
+                <p className="text-[13px] font-medium text-slate-700">Global Settings</p>
+                <p className="text-[12px] text-slate-400">
                     Using agency global Vapi settings (voice, phone number).
                 </p>
             </div>
 
-            <div className="p-4 border rounded-md space-y-4">
-                <div className="flex items-center justify-between">
-                    <Label className="font-semibold">Smart Retry Logic</Label>
+            {/* Smart Retry Logic */}
+            <div className="space-y-4">
+                <div className="flex items-center justify-between py-2">
+                    <p className="text-[13px] font-medium text-slate-700">Smart Retry Logic</p>
                     <Switch
                         checked={retryConfig.maxAttempts > 1}
                         onCheckedChange={(c) => updateRetry('maxAttempts', c ? 3 : 1)}
@@ -525,51 +525,57 @@ export const CallInput = ({ value, onChange }: CallInputProps) => {
                 </div>
 
                 {retryConfig.maxAttempts > 1 && (
-                    <div className="space-y-4 animate-in fade-in slide-in-from-top-2">
-                        <div className="space-y-2">
-                            <Label className="text-xs">Max Attempts</Label>
+                    <div className="space-y-5 animate-in fade-in slide-in-from-top-2">
+                        {/* Max Attempts */}
+                        <div className="space-y-1.5">
+                            <Label className="text-[12px] text-slate-500">Max Attempts</Label>
                             <Input
                                 type="number"
                                 min={2}
                                 max={10}
                                 value={retryConfig.maxAttempts}
                                 onChange={(e) => updateRetry('maxAttempts', parseInt(e.target.value))}
+                                className="h-9 border-slate-200 focus:border-slate-300 focus:ring-0"
                             />
                         </div>
 
-                        <div className="space-y-2">
+                        {/* Interventions */}
+                        <div className="space-y-3">
                             <div className="flex items-center justify-between">
-                                <Label className="text-xs font-medium text-muted-foreground">Interventions (Rules)</Label>
-                                <Button variant="ghost" size="sm" onClick={addIntervention} className="h-6">
-                                    <Plus className="h-3 w-3 mr-1" /> Add Rule
-                                </Button>
+                                <span className="text-[12px] text-slate-500">Interventions (Rules)</span>
+                                <button
+                                    onClick={addIntervention}
+                                    className="text-[12px] text-slate-500 hover:text-slate-700 flex items-center gap-1 transition-colors"
+                                >
+                                    <Plus className="h-3.5 w-3.5" />
+                                    Add Rule
+                                </button>
                             </div>
 
                             {retryConfig.interventions.length === 0 && (
-                                <div className="text-xs text-center text-muted-foreground py-2 border border-dashed rounded">
+                                <p className="text-[12px] text-slate-400 text-center py-3">
                                     No rules defined
-                                </div>
+                                </p>
                             )}
 
                             {retryConfig.interventions.map((rule, idx) => (
-                                <div key={idx} className="flex flex-col gap-2 p-3 bg-muted/30 rounded border text-sm relative group">
-                                    <Button
-                                        variant="ghost" size="icon"
-                                        className="absolute right-1 top-1 h-6 w-6 opacity-0 group-hover:opacity-100"
+                                <div key={idx} className="relative group p-3 bg-slate-50/50 rounded-lg space-y-2.5">
+                                    <button
+                                        className="absolute right-2 top-2 opacity-0 group-hover:opacity-100 transition-opacity text-slate-400 hover:text-red-500"
                                         onClick={() => removeIntervention(idx)}
                                     >
-                                        <Trash2 className="h-3 w-3 text-destructive" />
-                                    </Button>
+                                        <Trash2 className="h-3.5 w-3.5" />
+                                    </button>
 
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-muted-foreground whitespace-nowrap">If Attempt #</span>
+                                    <div className="flex items-center gap-2 text-[12px] text-slate-600">
+                                        <span>If Attempt #</span>
                                         <Input
                                             type="number"
-                                            className="w-16 h-8"
+                                            className="w-14 h-7 text-[12px] border-slate-200"
                                             value={rule.attempt}
                                             onChange={(e) => updateIntervention(idx, 'attempt', parseInt(e.target.value))}
                                         />
-                                        <span className="text-muted-foreground">fails, then:</span>
+                                        <span>fails, then:</span>
                                     </div>
 
                                     <div className="flex items-center gap-2">
@@ -577,7 +583,7 @@ export const CallInput = ({ value, onChange }: CallInputProps) => {
                                             value={rule.action}
                                             onValueChange={(v) => updateIntervention(idx, 'action', v)}
                                         >
-                                            <SelectTrigger className="h-8 flex-1">
+                                            <SelectTrigger className="h-8 flex-1 text-[12px] border-slate-200">
                                                 <SelectValue />
                                             </SelectTrigger>
                                             <SelectContent>
@@ -596,37 +602,38 @@ export const CallInput = ({ value, onChange }: CallInputProps) => {
                                         {rule.action === 'send_email' && (
                                             <Input
                                                 placeholder="Template ID"
-                                                className="flex-1 h-8"
+                                                className="flex-1 h-8 text-[12px] border-slate-200"
                                                 value={rule.templateId || ''}
                                                 onChange={(e) => updateIntervention(idx, 'templateId', e.target.value)}
                                             />
                                         )}
                                         {rule.action === 'update_contact' && (
-                                            <div className="flex items-center gap-2 flex-1">
-                                                <Badge variant="outline" className="text-xs font-normal">Group = Lost</Badge>
-                                            </div>
+                                            <span className="text-[11px] text-slate-500 px-2 py-1 bg-slate-100 rounded">
+                                                Group = Lost
+                                            </span>
                                         )}
                                     </div>
                                 </div>
                             ))}
                         </div>
 
-                        <div className="flex items-center justify-between p-3 border rounded bg-muted/10">
+                        {/* One call per window */}
+                        <div className="flex items-center justify-between py-2">
                             <div className="space-y-0.5">
-                                <Label className="text-xs">One call per window</Label>
-                                <p className="text-[10px] text-muted-foreground">
+                                <p className="text-[12px] text-slate-600">One call per window</p>
+                                <p className="text-[11px] text-slate-400">
                                     Limit to 1 attempt per active time block
                                 </p>
                             </div>
                             <Switch
-                                checked={retryConfig.oneCallPerWindow !== false} // default true
+                                checked={retryConfig.oneCallPerWindow !== false}
                                 onCheckedChange={(c) => updateRetry('oneCallPerWindow', c)}
                             />
                         </div>
                     </div>
                 )}
             </div>
-        </div >
+        </div>
     );
 };
 

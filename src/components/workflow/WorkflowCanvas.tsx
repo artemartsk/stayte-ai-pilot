@@ -422,64 +422,58 @@ const WorkflowCanvasContent = ({ initialNodes = [], initialEdges = [], onChange 
                 >
                     {selectedNode && (
                         (selectedNode.data.action === 'call' || selectedNode.data.action === 'send_whatsapp' || selectedNode.data.action === 'start_nurture') ? (
-                            // Split View for Call, WhatsApp, or Nurture Node
+                            // Split View for Call, WhatsApp, or Nurture Node - Notion style
                             <div className="flex h-full">
                                 {/* LEFT PANEL: Settings */}
-                                <div className="w-1/2 h-full overflow-y-auto border-r bg-background p-6">
-                                    <SheetHeader className="mb-6">
-                                        <SheetTitle className="flex items-center gap-2">
-                                            <Settings2 className="h-5 w-5" />
-                                            {selectedNode.data.action === 'call' ? 'Call Configuration' :
-                                                selectedNode.data.action === 'start_nurture' ? 'Nurture Sequence Config' :
-                                                    'WhatsApp Configuration'}
-                                        </SheetTitle>
-                                        <SheetDescription>
+                                <div className="w-1/2 h-full overflow-y-auto border-r border-slate-100 bg-white p-8">
+                                    <div className="mb-8">
+                                        <div className="flex items-center gap-2.5 mb-1">
+                                            <Settings2 className="h-4 w-4 text-slate-400" />
+                                            <h2 className="text-[15px] font-semibold text-slate-800">
+                                                {selectedNode.data.action === 'call' ? 'Call Configuration' :
+                                                    selectedNode.data.action === 'start_nurture' ? 'Nurture Sequence' :
+                                                        'WhatsApp Configuration'}
+                                            </h2>
+                                        </div>
+                                        <p className="text-[13px] text-slate-400 ml-6">
                                             {selectedNode.data.action === 'call' ? 'Configure voice, retry logic, and fallback rules.' :
                                                 selectedNode.data.action === 'start_nurture' ? 'Configure property recommendations and schedule.' :
                                                     'Configure message templates and sending logic.'}
-                                        </SheetDescription>
-                                    </SheetHeader>
+                                        </p>
+                                    </div>
 
                                     <div className="space-y-6">
+                                        {selectedNode.data.action === 'call' ? (
+                                            <CallInput
+                                                value={selectedNode.data.config as CallConfig}
+                                                onChange={(val) => handleNodeDataChange(selectedNode.id, { config: val })}
+                                            />
+                                        ) : selectedNode.data.action === 'start_nurture' ? (
+                                            <NurtureInput
+                                                value={selectedNode.data.config as NurtureConfig}
+                                                onChange={(val) => handleNodeDataChange(selectedNode.id, { config: val })}
+                                            />
+                                        ) : (
+                                            <WhatsAppInput
+                                                value={selectedNode.data.config as WhatsAppConfig}
+                                                onChange={(val) => handleNodeDataChange(selectedNode.id, { config: val })}
+                                            />
+                                        )}
 
-
-
-
-                                        <div className="border-t pt-4">
-                                            {selectedNode.data.action === 'call' ? (
-                                                <CallInput
-                                                    value={selectedNode.data.config as CallConfig}
-                                                    onChange={(val) => handleNodeDataChange(selectedNode.id, { config: val })}
-                                                />
-                                            ) : selectedNode.data.action === 'start_nurture' ? (
-                                                <NurtureInput
-                                                    value={selectedNode.data.config as NurtureConfig}
-                                                    onChange={(val) => handleNodeDataChange(selectedNode.id, { config: val })}
-                                                />
-                                            ) : (
-                                                <WhatsAppInput
-                                                    value={selectedNode.data.config as WhatsAppConfig}
-                                                    onChange={(val) => handleNodeDataChange(selectedNode.id, { config: val })}
-                                                />
-                                            )}
-                                        </div>
-
-                                        <div className="pt-6 flex justify-start">
-                                            <Button
-                                                variant="ghost"
-                                                size="sm"
-                                                className="text-muted-foreground hover:text-red-600 hover:bg-red-50 p-2 h-auto"
+                                        <div className="pt-4">
+                                            <button
+                                                className="text-[12px] text-slate-400 hover:text-red-500 transition-colors flex items-center gap-1.5"
                                                 onClick={() => handleNodeDelete(selectedNode.id)}
                                             >
-                                                <Trash2 className="h-4 w-4 mr-2" />
-                                                <span className="text-xs">Delete</span>
-                                            </Button>
+                                                <Trash2 className="h-3.5 w-3.5" />
+                                                Delete
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
 
                                 {/* RIGHT PANEL: Schedule */}
-                                <div className="w-1/2 h-full bg-background p-6 flex flex-col pl-0">
+                                <div className="w-1/2 h-full bg-slate-50/50 p-6 flex flex-col">
                                     <div className="flex-1 overflow-hidden">
                                         <WeeklyScheduleGrid
                                             value={selectedNode.data.timeWindows}
