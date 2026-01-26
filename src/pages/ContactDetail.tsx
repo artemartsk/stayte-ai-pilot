@@ -358,15 +358,21 @@ const ContactDetail = () => {
         ...commsAsActivities
       ].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
-      // Add "Lead Created" as the earliest event (will be at the end after sorting)
-      // We'll add it here and it will naturally sort to the bottom
-      if (contact?.created_at) {
+      // Fetch contact created_at for Lead Created entry
+      const { data: contactData } = await supabase
+        .from('contacts')
+        .select('created_at')
+        .eq('id', id)
+        .single();
+
+      // Add "Lead Created" as the earliest event
+      if (contactData?.created_at) {
         allActivities.push({
           id: 'lead-created',
           contact_id: id,
           type: 'contact_created',
           description: 'Lead Created',
-          created_at: contact.created_at,
+          created_at: contactData.created_at,
           payload: null,
           source: 'system',
           callStatus: null
