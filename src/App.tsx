@@ -15,11 +15,11 @@ import PropertyDetail from "./pages/PropertyDetail";
 import Deals from "./pages/Deals";
 import AITasks from "./pages/AITasks";
 import AgentsDashboard from "./pages/AgentsDashboard";
-import Integrations from "./pages/Integrations";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import Index from "./pages/Index";
 import Pricing from "./pages/Pricing";
+import Settings from "./pages/Settings";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -51,7 +51,7 @@ function App() {
                 <Route path="/deals" element={<Deals />} />
                 <Route path="/ai/tasks" element={<AITasks />} />
                 <Route path="/agents" element={<AgentsDashboard />} />
-                <Route path="/integrations" element={<Integrations />} />
+                <Route path="/settings" element={<Settings />} />
               </Route>
               <Route path="*" element={<NotFound />} />
             </Routes>

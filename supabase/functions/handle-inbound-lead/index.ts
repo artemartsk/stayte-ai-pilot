@@ -126,7 +126,8 @@ Deno.serve(async (req) => {
             const { data: parsedData, error: parseError } = await supabase.functions.invoke('extract-lead-details', {
                 body: {
                     text: rawContent,
-                    context: `Inbound email from ${emailData.from}`
+                    context: `Inbound email from ${emailData.from}`,
+                    agency_id: agencyId
                 }
             });
 

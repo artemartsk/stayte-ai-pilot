@@ -18,7 +18,7 @@ serve(async (req) => {
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     try {
-        const { text, context } = await req.json();
+        const { text, context, agency_id } = await req.json();
 
         if (!text) {
             return new Response(JSON.stringify({ error: 'Text input is required' }), {
@@ -41,6 +41,22 @@ serve(async (req) => {
             .select('key, name');
 
         if (featError) console.error('Error fetching features:', featError);
+
+        // Fetch Lead Sources if agency_id is provided
+        let sourceList = '';
+        if (agency_id) {
+            const { data: sources, error: sourceError } = await supabase
+                .from('lead_sources')
+                .select('name')
+                .eq('agency_id', agency_id);
+
+            if (sourceError) {
+                console.error('Error fetching lead sources:', sourceError);
+            } else if (sources && sources.length > 0) {
+                sourceList = sources.map((s: any) => s.name).join(', ');
+                console.log(`Loaded ${sources.length} custom lead sources: ${sourceList}`);
+            }
+        }
 
         // Build reference lists for the prompt
         const locationList = (locations || [])
@@ -68,7 +84,11 @@ serve(async (req) => {
             - summary (string, brief summary of the request)
             - is_agent (boolean): True if sender is a real estate agent/broker (look for 'collaborate', 'share commission', 'my client', 'inmobiliaria')
             - agency_name (string): Name of the agency if sender is an agent
-            - portal (string): The ORIGIN platform/website. CRITICAL: If this is a forwarded email, look for "De: Idealista", "From: Fotocasa", "via Idealista", etc. in the body. Examples: Idealista, Fotocasa, Kyero, Rightmove, JamesEdition. IF NO SPECIFIC PORTAL IS FOUND, RETURN "Email".
+            - portal (string): The ORIGIN platform/website. 
+              CRITICAL: Map to one of these EXACT values if possible: [${sourceList || 'Idealista, Fotocasa, Kyero, Rightmove, JamesEdition, Website, WhatsApp'}]. 
+              If the email is from a known portal but not in the list, use the portal name (e.g. "Rightmove Overseas"). 
+              If it is a direct email not from a portal, return "Email".
+              If it is from a specific source configured by the user, PRIORITIZE matching that source name (case-insensitive).
 
             PERSONAL DETAILS (Demographics, Job, Income):
             - age_25_35 (boolean)

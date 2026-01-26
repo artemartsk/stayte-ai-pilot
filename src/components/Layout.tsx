@@ -48,7 +48,7 @@ function AppSidebar() {
     { name: "My Agents", href: "/agents", icon: UserCog },
     { name: "Deals", href: "/deals", icon: Briefcase },
     { name: "AI Tasks", href: "/ai/tasks", icon: Bot },
-    { name: "Integrations", href: "/integrations", icon: Settings },
+    { name: "Settings", href: "/settings", icon: Settings },
   ];
 
   return (
