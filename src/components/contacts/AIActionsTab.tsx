@@ -1,7 +1,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { Loader2, Calendar, CheckCircle2, XCircle, Clock, ArrowRight, MessageSquare, Phone, Mail, Zap } from 'lucide-react';
+import { Loader2, Phone, Mail, MessageSquare, Clock, Zap, Calendar, CheckCircle2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 
@@ -10,14 +10,24 @@ interface AIActionsTabProps {
     dealIds: string[];
 }
 
+interface ActionRow {
+    id: string;
+    action: string;
+    status: 'completed' | 'waiting' | 'scheduled' | 'failed';
+    time: Date;
+    isScheduled: boolean;
+    details?: string;
+    source: 'log' | 'workflow';
+}
+
 export function AIActionsTab({ contactId, dealIds }: AIActionsTabProps) {
-    // Fetch active workflows
+    // Fetch active workflows (for scheduled next steps)
     const { data: workflows, isLoading: workflowsLoading } = useQuery({
         queryKey: ['active-workflows-tab', contactId],
         queryFn: async () => {
             const { data, error } = await supabase
                 .from('workflow_runs')
-                .select('*, ai_workflow_templates(name)')
+                .select('*, ai_workflow_templates(name, steps)')
                 .eq('contact_id', contactId)
                 .neq('status', 'completed')
                 .neq('status', 'failed')
@@ -46,24 +56,7 @@ export function AIActionsTab({ contactId, dealIds }: AIActionsTabProps) {
         enabled: !!contactId,
     });
 
-    const { data: tasks, isLoading } = useQuery({
-        queryKey: ['ai-tasks-tab', contactId],
-        queryFn: async () => {
-            if (dealIds.length === 0) return [];
-
-            const { data, error } = await supabase
-                .from('ai_tasks')
-                .select('*')
-                .in('deal_id', dealIds)
-                .order('scheduled_at', { ascending: true }); // Ascending to separate past/future easily
-
-            if (error) throw error;
-            return data || [];
-        },
-        enabled: dealIds.length > 0,
-    });
-
-    if (isLoading || workflowsLoading || stepLogsLoading) {
+    if (workflowsLoading || stepLogsLoading) {
         return (
             <div className="flex justify-center p-12">
                 <Loader2 className="h-5 w-5 animate-spin text-slate-300" />
@@ -71,7 +64,53 @@ export function AIActionsTab({ contactId, dealIds }: AIActionsTabProps) {
         );
     }
 
-    if ((!tasks || tasks.length === 0) && (!workflows || workflows.length === 0) && (!stepLogs || stepLogs.length === 0)) {
+    // Build unified action rows
+    const actionRows: ActionRow[] = [];
+
+    // Add executed steps from logs
+    (stepLogs || []).forEach((log: any) => {
+        const isFailed = log.status === 'failed';
+        const isWaiting = log.status === 'waiting_for_callback';
+
+        actionRows.push({
+            id: log.id,
+            action: log.action,
+            status: isFailed ? 'failed' : isWaiting ? 'waiting' : 'completed',
+            time: new Date(log.executed_at || log.created_at),
+            isScheduled: false,
+            details: log.error_message || (log.result?.call_id ? `Call ID: ${log.result.call_id.slice(0, 8)}...` : undefined),
+            source: 'log'
+        });
+    });
+
+    // Add scheduled next steps from active workflows
+    (workflows || []).forEach((run: any) => {
+        if (run.next_run_at && run.current_node_id) {
+            const steps = run.ai_workflow_templates?.steps as any;
+            const currentNode = steps?.nodes?.find((n: any) => n.id === run.current_node_id);
+            const action = currentNode?.data?.action || 'next_step';
+
+            actionRows.push({
+                id: `scheduled-${run.id}`,
+                action: action,
+                status: 'scheduled',
+                time: new Date(run.next_run_at),
+                isScheduled: true,
+                details: run.ai_workflow_templates?.name,
+                source: 'workflow'
+            });
+        }
+    });
+
+    // Sort by time (scheduled first by future date, then completed by past date desc)
+    actionRows.sort((a, b) => {
+        if (a.isScheduled && !b.isScheduled) return -1;
+        if (!a.isScheduled && b.isScheduled) return 1;
+        if (a.isScheduled && b.isScheduled) return a.time.getTime() - b.time.getTime();
+        return b.time.getTime() - a.time.getTime();
+    });
+
+    if (actionRows.length === 0) {
         return (
             <div className="flex flex-col items-center justify-center p-12 border border-dashed border-slate-200 rounded-lg bg-slate-50/50">
                 <div className="h-10 w-10 bg-slate-100 rounded-full flex items-center justify-center mb-3">
@@ -82,21 +121,6 @@ export function AIActionsTab({ contactId, dealIds }: AIActionsTabProps) {
             </div>
         );
     }
-
-    const now = new Date();
-
-    // Group tasks
-    const planned = (tasks || []).filter(t =>
-        (t.status === 'pending' || t.status === 'queued') &&
-        new Date(t.scheduled_at) > now
-    ).sort((a, b) => new Date(a.scheduled_at).getTime() - new Date(b.scheduled_at).getTime());
-
-    const completed = (tasks || []).filter(t =>
-        t.status === 'done' ||
-        t.status === 'failed' ||
-        t.status === 'canceled' ||
-        (new Date(t.scheduled_at) <= now && t.status !== 'done' && t.status !== 'failed' && t.status !== 'canceled') // Overdue/Processing
-    ).sort((a, b) => new Date(b.scheduled_at).getTime() - new Date(a.scheduled_at).getTime()); // Newest first
 
     const getIcon = (action: string) => {
         switch (action) {
@@ -113,190 +137,90 @@ export function AIActionsTab({ contactId, dealIds }: AIActionsTabProps) {
             case 'call': return 'AI Call';
             case 'send_email': return 'Email';
             case 'send_whatsapp': return 'WhatsApp';
-            case 'wait': return 'Wait Delay';
+            case 'wait': return 'Wait';
             case 'markup_table': return 'Update Table';
             case 'check_qualification': return 'Check Qualification';
             case 'assign_agent': return 'Assign Agent';
-            default: return action.replace(/_/g, ' ');
+            case 'next_step': return 'Next Step';
+            default: return action.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        }
+    };
+
+    const getStatusBadge = (status: ActionRow['status']) => {
+        switch (status) {
+            case 'completed':
+                return <span className="text-green-600">Completed</span>;
+            case 'waiting':
+                return <span className="text-amber-600">Waiting</span>;
+            case 'scheduled':
+                return <span className="text-blue-600">Scheduled</span>;
+            case 'failed':
+                return <span className="text-red-600">Failed</span>;
         }
     };
 
     return (
-        <div className="max-w-3xl space-y-12 animate-in fade-in-50 duration-500">
+        <div className="animate-in fade-in-50 duration-300">
+            {/* Notion-style table */}
+            <div className="w-full">
+                {/* Header */}
+                <div className="grid grid-cols-12 gap-4 px-3 py-2 text-xs text-slate-400 font-medium border-b border-slate-100">
+                    <div className="col-span-4">Action</div>
+                    <div className="col-span-2">Status</div>
+                    <div className="col-span-3">Time</div>
+                    <div className="col-span-3">Details</div>
+                </div>
 
-            {/* SECTION: ACTIVE WORKFLOWS */}
-            {workflows && workflows.length > 0 && (
-                <section>
-                    <div className="flex items-center gap-2 mb-4">
-                        <div className="h-1.5 w-1.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]"></div>
-                        <h3 className="text-xs font-semibold uppercase tracking-widest text-slate-500">Running Workflows</h3>
-                    </div>
+                {/* Rows */}
+                <div className="divide-y divide-slate-50">
+                    {actionRows.map((row) => {
+                        const Icon = getIcon(row.action);
 
-                    <div className="space-y-3">
-                        {workflows.map((run) => (
-                            <div key={run.id} className="p-4 rounded-lg bg-white border border-slate-200 shadow-sm flex items-center justify-between">
-                                <div className="flex items-center gap-3">
-                                    <div className="h-9 w-9 rounded-md bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
-                                        <Zap className="h-4 w-4" />
+                        return (
+                            <div
+                                key={row.id}
+                                className="grid grid-cols-12 gap-4 px-3 py-3 hover:bg-slate-50/50 transition-colors items-center"
+                            >
+                                {/* Action */}
+                                <div className="col-span-4 flex items-center gap-3">
+                                    <div className={cn(
+                                        "h-7 w-7 rounded flex items-center justify-center shrink-0",
+                                        row.status === 'failed' ? "bg-red-50 text-red-500" :
+                                            row.status === 'waiting' ? "bg-amber-50 text-amber-500" :
+                                                row.status === 'scheduled' ? "bg-blue-50 text-blue-500" :
+                                                    "bg-slate-100 text-slate-500"
+                                    )}>
+                                        <Icon className="h-3.5 w-3.5" />
                                     </div>
-                                    <div>
-                                        <p className="text-sm font-medium text-slate-900">
-                                            {run.ai_workflow_templates?.name || 'Workflow'}
-                                        </p>
-                                        <div className="flex items-center gap-2 mt-0.5">
-                                            <span className="text-xs text-slate-500 flex items-center gap-1">
-                                                <div className="w-1 h-1 rounded-full bg-slate-400"></div>
-                                                Status: <span className="font-medium text-slate-700 uppercase">{run.status}</span>
-                                            </span>
-                                            {run.next_run_at && (
-                                                <span className="text-xs text-slate-400">
-                                                    • Next: {format(new Date(run.next_run_at), "h:mm a")}
-                                                </span>
-                                            )}
-                                        </div>
-                                    </div>
+                                    <span className="text-sm text-slate-700 font-medium">{getLabel(row.action)}</span>
                                 </div>
-                                <div className="text-right">
-                                    <span className="inline-flex items-center rounded-full bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10 animate-pulse">
-                                        Running
-                                    </span>
+
+                                {/* Status */}
+                                <div className="col-span-2 text-sm">
+                                    {getStatusBadge(row.status)}
+                                </div>
+
+                                {/* Time */}
+                                <div className="col-span-3 text-sm text-slate-500">
+                                    {row.isScheduled ? (
+                                        <span className="flex items-center gap-1.5">
+                                            <Calendar className="h-3.5 w-3.5 text-slate-400" />
+                                            {format(row.time, "MMM d, HH:mm")}
+                                        </span>
+                                    ) : (
+                                        format(row.time, "MMM d, HH:mm")
+                                    )}
+                                </div>
+
+                                {/* Details */}
+                                <div className="col-span-3 text-sm text-slate-400 truncate">
+                                    {row.details || '—'}
                                 </div>
                             </div>
-                        ))}
-                    </div>
-                </section>
-            )}
-
-            {/* SECTION: PLANNED */}
-            <section>
-                <div className="flex items-center gap-2 mb-4">
-                    <div className="h-1.5 w-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]"></div>
-                    <h3 className="text-xs font-semibold uppercase tracking-widest text-slate-500">Planned Tasks</h3>
+                        );
+                    })}
                 </div>
-
-                {planned.length === 0 ? (
-                    <div className="text-xs text-slate-400 pl-4 py-2 italic font-light">
-                        No upcoming tasks scheduled.
-                    </div>
-                ) : (
-                    <div className="space-y-1">
-                        {planned.map((task, i) => {
-                            const Icon = getIcon(task.action);
-                            return (
-                                <div key={task.id} className="group relative flex items-center gap-4 p-3 rounded-lg hover:bg-slate-50 transition-all border border-transparent hover:border-slate-100">
-                                    {/* Timeline Line */}
-                                    {i !== planned.length - 1 && (
-                                        <div className="absolute left-[27px] top-10 bottom-[-14px] w-px bg-slate-100 group-hover:bg-slate-200 transition-colors"></div>
-                                    )}
-
-                                    <div className="relative z-10 h-9 w-9 rounded-md bg-white border border-slate-200 shadow-sm flex items-center justify-center text-slate-500 group-hover:text-blue-600 group-hover:border-blue-100 transition-colors">
-                                        <Icon className="h-4 w-4" />
-                                    </div>
-
-                                    <div className="flex-1 min-w-0">
-                                        <div className="flex items-center gap-2">
-                                            <span className="text-sm font-medium text-slate-700">{getLabel(task.action)}</span>
-                                            <span className="inline-flex items-center rounded-full bg-blue-50 px-1.5 py-0.5 text-[10px] font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10">
-                                                Scheduled
-                                            </span>
-                                        </div>
-                                        <div className="flex items-center gap-2 mt-0.5">
-                                            <Calendar className="h-3 w-3 text-slate-400" />
-                                            <span className="text-xs text-slate-500">
-                                                {format(new Date(task.scheduled_at), "MMM d, h:mm a")}
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <div className="p-1.5 rounded-md hover:bg-slate-200 cursor-pointer text-slate-400">
-                                            <ArrowRight className="h-3.5 w-3.5" />
-                                        </div>
-                                    </div>
-                                </div>
-                            );
-                        })}
-                    </div>
-                )}
-            </section>
-
-            {/* SECTION: STEP LOGS HISTORY - TABLE FORMAT */}
-            <section>
-                <div className="flex items-center gap-2 mb-4">
-                    <div className="h-1.5 w-1.5 rounded-full bg-slate-300"></div>
-                    <h3 className="text-xs font-semibold uppercase tracking-widest text-slate-400">Execution History</h3>
-                </div>
-
-                {(!stepLogs || stepLogs.length === 0) ? (
-                    <div className="text-xs text-slate-400 pl-4 py-2 italic font-light">
-                        No execution history yet.
-                    </div>
-                ) : (
-                    <div className="border border-slate-200 rounded-lg overflow-hidden">
-                        <table className="w-full text-sm">
-                            <thead className="bg-slate-50 border-b border-slate-200">
-                                <tr>
-                                    <th className="text-left px-4 py-2.5 text-xs font-semibold text-slate-500 uppercase tracking-wide">Action</th>
-                                    <th className="text-left px-4 py-2.5 text-xs font-semibold text-slate-500 uppercase tracking-wide">Status</th>
-                                    <th className="text-left px-4 py-2.5 text-xs font-semibold text-slate-500 uppercase tracking-wide">Time</th>
-                                    <th className="text-left px-4 py-2.5 text-xs font-semibold text-slate-500 uppercase tracking-wide">Details</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-slate-100">
-                                {stepLogs.map((log: any) => {
-                                    const Icon = getIcon(log.action);
-                                    const isFailed = log.status === 'failed';
-                                    const isSuccess = log.status === 'success';
-                                    const isWaiting = log.status === 'waiting_for_callback';
-
-                                    return (
-                                        <tr key={log.id} className="hover:bg-slate-50/50 transition-colors">
-                                            <td className="px-4 py-3">
-                                                <div className="flex items-center gap-2.5">
-                                                    <div className={cn(
-                                                        "h-8 w-8 rounded-md flex items-center justify-center",
-                                                        isFailed ? "bg-red-50 text-red-500" :
-                                                            isSuccess ? "bg-green-50 text-green-600" :
-                                                                isWaiting ? "bg-amber-50 text-amber-600" :
-                                                                    "bg-slate-100 text-slate-500"
-                                                    )}>
-                                                        <Icon className="h-4 w-4" />
-                                                    </div>
-                                                    <span className="font-medium text-slate-700">{getLabel(log.action)}</span>
-                                                </div>
-                                            </td>
-                                            <td className="px-4 py-3">
-                                                <span className={cn(
-                                                    "inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium",
-                                                    isFailed ? "bg-red-100 text-red-700" :
-                                                        isSuccess ? "bg-green-100 text-green-700" :
-                                                            isWaiting ? "bg-amber-100 text-amber-700" :
-                                                                "bg-slate-100 text-slate-600"
-                                                )}>
-                                                    {isWaiting ? 'Waiting' : log.status}
-                                                </span>
-                                            </td>
-                                            <td className="px-4 py-3 text-slate-500 text-xs font-mono">
-                                                {log.executed_at ? format(new Date(log.executed_at), "MMM d, HH:mm") : '—'}
-                                            </td>
-                                            <td className="px-4 py-3 text-xs text-slate-400 max-w-[200px] truncate">
-                                                {log.error_message ? (
-                                                    <span className="text-red-500">{log.error_message}</span>
-                                                ) : log.result?.call_id ? (
-                                                    <span>Call ID: {log.result.call_id.slice(0, 8)}...</span>
-                                                ) : (
-                                                    '—'
-                                                )}
-                                            </td>
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
-                    </div>
-                )}
-            </section>
-
+            </div>
         </div>
     );
 }
