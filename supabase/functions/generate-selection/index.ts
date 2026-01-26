@@ -84,10 +84,20 @@ Deno.serve(async (req) => {
 
         // Apply Location Filters if available
         if (requestedCity || requestedArea) {
-            const locations = [requestedCity, requestedArea].filter(Boolean) as string[]
-            // We use or condition to check if address contains any of the requested locations
-            const locationFilters = locations.map(loc => `address.ilike.%${loc}%`).join(',')
-            query = query.or(locationFilters)
+            // Split comma-separated values into individual locations
+            const rawLocations = [requestedCity, requestedArea].filter(Boolean) as string[]
+            const locations: string[] = []
+            for (const raw of rawLocations) {
+                // Split by comma, trim whitespace, filter empty
+                const parts = raw.split(',').map(s => s.trim()).filter(Boolean)
+                locations.push(...parts)
+            }
+
+            if (locations.length > 0) {
+                // Build OR filter for each location separately to avoid comma parsing issues
+                const locationFilters = locations.map(loc => `address.ilike.%${loc}%`).join(',')
+                query = query.or(locationFilters)
+            }
         }
 
         const { data: candidates, error: candidatesError } = await query

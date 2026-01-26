@@ -534,7 +534,7 @@ export const CallInput = ({ value, onChange }: CallInputProps) => {
                         <p className="text-[13px] text-slate-500 flex-1">Max Attempts</p>
                         <Input
                             type="number"
-                            min={2}
+                            min={1}
                             max={10}
                             value={retryConfig.maxAttempts}
                             onChange={(e) => updateRetry('maxAttempts', parseInt(e.target.value))}

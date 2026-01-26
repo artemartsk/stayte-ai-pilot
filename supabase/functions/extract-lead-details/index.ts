@@ -124,8 +124,8 @@ serve(async (req) => {
             LOCATION:
             - country (string): Country where client wants to buy
             - region (string): Region where client wants to buy
-            - city (string): City where client wants to buy
-            - area (string): Area where client wants to buy
+            - city (string): SINGLE city/town where client wants to buy. If multiple locations are mentioned, pick the FIRST/MOST IMPORTANT one.
+            - area (string): SINGLE area/neighborhood where client wants to buy. If multiple areas mentioned, pick only ONE. Use location_ids for all matches.
             - loc_coast (boolean): Near sea is important
             - loc_city_center (boolean): City center is important
             - loc_suburbs (boolean): Suburbs location is important
