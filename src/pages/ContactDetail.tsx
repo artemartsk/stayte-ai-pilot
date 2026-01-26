@@ -358,6 +358,23 @@ const ContactDetail = () => {
         ...commsAsActivities
       ].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
+      // Add "Lead Created" as the earliest event (will be at the end after sorting)
+      // We'll add it here and it will naturally sort to the bottom
+      if (contact?.created_at) {
+        allActivities.push({
+          id: 'lead-created',
+          contact_id: id,
+          type: 'contact_created',
+          description: 'Lead Created',
+          created_at: contact.created_at,
+          payload: null,
+          source: 'system',
+          callStatus: null
+        });
+        // Re-sort to ensure Lead Created is in correct chronological position
+        allActivities.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+      }
+
       return allActivities;
     },
     enabled: !!id,

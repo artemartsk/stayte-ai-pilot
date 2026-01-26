@@ -221,17 +221,27 @@ serve(async (req) => {
                 console.log(`Logged call result to contact_communications: ${finalStatus}`)
 
                 // Update workflow_step_logs with final call result
-                // Find the log entry with waiting_for_callback status for this call
-                const { data: existingLogs } = await supabase
-                    .from('workflow_step_logs')
-                    .select('id')
-                    .eq('contact_id', contactId)
-                    .eq('status', 'waiting_for_callback')
-                    .order('created_at', { ascending: false })
-                    .limit(1)
+                console.log(`Looking for workflow_step_logs with contact_id: ${contactId}, call_id: ${call.id}`)
 
-                if (existingLogs && existingLogs.length > 0) {
-                    await supabase.from('workflow_step_logs').update({
+                // First try to find by call_id in result (more reliable)
+                const { data: existingLogs, error: logsError } = await supabase
+                    .from('workflow_step_logs')
+                    .select('id, status, result')
+                    .eq('contact_id', contactId)
+                    .eq('action', 'call')
+                    .order('created_at', { ascending: false })
+                    .limit(5)
+
+                console.log(`Found ${existingLogs?.length || 0} call logs for contact. Error: ${logsError?.message || 'none'}`)
+
+                // Find the one matching this call or the one still waiting
+                const logToUpdate = existingLogs?.find((log: any) =>
+                    log.result?.call_id === call.id || log.status === 'waiting_for_callback'
+                )
+
+                if (logToUpdate) {
+                    console.log(`Updating log ${logToUpdate.id} from status ${logToUpdate.status} to ${finalStatus}`)
+                    const { error: updateError } = await supabase.from('workflow_step_logs').update({
                         status: finalStatus,
                         result: {
                             call_id: call.id,
@@ -239,8 +249,15 @@ serve(async (req) => {
                             duration: call.durationSeconds,
                             summary: analysis?.summary
                         }
-                    }).eq('id', existingLogs[0].id)
-                    console.log(`Updated workflow_step_logs to status: ${finalStatus}`)
+                    }).eq('id', logToUpdate.id)
+
+                    if (updateError) {
+                        console.error('Failed to update workflow_step_logs:', updateError)
+                    } else {
+                        console.log(`Updated workflow_step_logs to status: ${finalStatus}`)
+                    }
+                } else {
+                    console.log('No matching workflow_step_log found to update')
                 }
             }
         }

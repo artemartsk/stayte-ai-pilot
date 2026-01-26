@@ -1,7 +1,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { Loader2, Phone, Mail, MessageSquare, Clock, Zap, Calendar, CheckCircle2 } from 'lucide-react';
+import { Loader2, Phone, Mail, MessageSquare, Clock, Zap, Calendar, CheckCircle2, UserPlus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 
@@ -17,7 +17,7 @@ interface ActionRow {
     time: Date;
     isScheduled: boolean;
     details?: string;
-    source: 'log' | 'workflow';
+    source: 'log' | 'workflow' | 'contact';
 }
 
 export function AIActionsTab({ contactId, dealIds }: AIActionsTabProps) {
@@ -56,7 +56,23 @@ export function AIActionsTab({ contactId, dealIds }: AIActionsTabProps) {
         enabled: !!contactId,
     });
 
-    if (workflowsLoading || stepLogsLoading) {
+    // Fetch contact created_at
+    const { data: contact, isLoading: contactLoading } = useQuery({
+        queryKey: ['contact-created', contactId],
+        queryFn: async () => {
+            const { data, error } = await supabase
+                .from('contacts')
+                .select('created_at')
+                .eq('id', contactId)
+                .single();
+
+            if (error) throw error;
+            return data;
+        },
+        enabled: !!contactId,
+    });
+
+    if (workflowsLoading || stepLogsLoading || contactLoading) {
         return (
             <div className="flex justify-center p-12">
                 <Loader2 className="h-5 w-5 animate-spin text-slate-300" />
@@ -120,6 +136,19 @@ export function AIActionsTab({ contactId, dealIds }: AIActionsTabProps) {
         }
     });
 
+    // Add Lead Created as first event
+    if (contact?.created_at) {
+        actionRows.push({
+            id: 'lead-created',
+            action: 'lead_created',
+            status: 'completed',
+            time: new Date(contact.created_at),
+            isScheduled: false,
+            details: 'Lead added to system',
+            source: 'contact'
+        });
+    }
+
     // Sort by time (scheduled first by future date, then completed by past date desc)
     actionRows.sort((a, b) => {
         if (a.isScheduled && !b.isScheduled) return -1;
@@ -146,6 +175,7 @@ export function AIActionsTab({ contactId, dealIds }: AIActionsTabProps) {
             case 'send_email': return Mail;
             case 'send_whatsapp': return MessageSquare;
             case 'wait': return Clock;
+            case 'lead_created': return UserPlus;
             default: return Zap;
         }
     };
@@ -160,6 +190,7 @@ export function AIActionsTab({ contactId, dealIds }: AIActionsTabProps) {
             case 'check_qualification': return 'Check Qualification';
             case 'assign_agent': return 'Assign Agent';
             case 'next_step': return 'Next Step';
+            case 'lead_created': return 'Lead Created';
             default: return action.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
         }
     };

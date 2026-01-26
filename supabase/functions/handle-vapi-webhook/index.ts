@@ -115,6 +115,43 @@ Deno.serve(async (req) => {
                 });
             }
 
+            // Update workflow_step_logs with final call result
+            console.log(`Looking for workflow_step_logs with contact_id: ${contactId}, call_id: ${callId}`);
+
+            const { data: existingLogs, error: logsError } = await supabase
+                .from('workflow_step_logs')
+                .select('id, status, result')
+                .eq('contact_id', contactId)
+                .eq('action', 'call')
+                .order('created_at', { ascending: false })
+                .limit(5);
+
+            console.log(`Found ${existingLogs?.length || 0} call logs for contact. Error: ${logsError?.message || 'none'}`);
+
+            // Find the one matching this call or the one still waiting
+            const logToUpdate = existingLogs?.find((log: any) =>
+                log.result?.call_id === callId || log.status === 'waiting_for_callback'
+            );
+
+            if (logToUpdate) {
+                console.log(`Updating workflow_step_log ${logToUpdate.id} from status ${logToUpdate.status} to ${finalStatus}`);
+                const { error: updateError } = await supabase.from('workflow_step_logs').update({
+                    status: finalStatus,
+                    result: {
+                        call_id: callId,
+                        reason: reason,
+                    }
+                }).eq('id', logToUpdate.id);
+
+                if (updateError) {
+                    console.error('Failed to update workflow_step_logs:', updateError);
+                } else {
+                    console.log(`Updated workflow_step_logs to status: ${finalStatus}`);
+                }
+            } else {
+                console.log('No matching workflow_step_log found to update');
+            }
+
             // WhatsApp Logic (Only on failure) - PRESERVING LEGACY LOGIC IF NEEDED, BUT WORKFLOW SHOULD HANDLE IT
             if (isNoAnswer) {
                 // Legacy support: If this call wasn't from a workflow, we might still want to do something? 
