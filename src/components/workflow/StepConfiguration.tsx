@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { Plus, Trash2, Mail, MessageSquare, UserCog, AlertCircle, GitBranch, Flame } from 'lucide-react';
+import { Plus, Trash2, Mail, MessageSquare, UserCog, AlertCircle, GitBranch, Flame, Settings2, RefreshCw } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -505,134 +505,110 @@ export const CallInput = ({ value, onChange }: CallInputProps) => {
     };
 
     return (
-        <div className="space-y-6">
-            {/* Global Settings - Notion style */}
-            <div className="space-y-1">
-                <p className="text-[13px] font-medium text-slate-700">Global Settings</p>
-                <p className="text-[12px] text-slate-400">
-                    Using agency global Vapi settings (voice, phone number).
-                </p>
+        <div className="space-y-1">
+            {/* Row: Global Settings */}
+            <div className="flex items-start gap-4 py-3 border-b border-slate-100">
+                <Settings2 className="h-4 w-4 text-slate-400 mt-0.5 shrink-0" />
+                <div className="flex-1">
+                    <p className="text-[13px] font-medium text-slate-700">Global Settings</p>
+                    <p className="text-[12px] text-slate-400 mt-0.5">
+                        Using agency global Vapi settings (voice, phone number).
+                    </p>
+                </div>
             </div>
 
-            {/* Smart Retry Logic */}
-            <div className="space-y-4">
-                <div className="flex items-center justify-between py-2">
-                    <p className="text-[13px] font-medium text-slate-700">Smart Retry Logic</p>
-                    <Switch
-                        checked={retryConfig.maxAttempts > 1}
-                        onCheckedChange={(c) => updateRetry('maxAttempts', c ? 3 : 1)}
-                    />
-                </div>
+            {/* Row: Smart Retry Logic */}
+            <div className="flex items-center gap-4 py-3 border-b border-slate-100">
+                <RefreshCw className="h-4 w-4 text-slate-400 shrink-0" />
+                <p className="text-[13px] text-slate-700 flex-1">Smart Retry Logic</p>
+                <Switch
+                    checked={retryConfig.maxAttempts > 1}
+                    onCheckedChange={(c) => updateRetry('maxAttempts', c ? 3 : 1)}
+                />
+            </div>
 
-                {retryConfig.maxAttempts > 1 && (
-                    <div className="space-y-5 animate-in fade-in slide-in-from-top-2">
-                        {/* Max Attempts */}
-                        <div className="space-y-1.5">
-                            <Label className="text-[12px] text-slate-500">Max Attempts</Label>
-                            <Input
-                                type="number"
-                                min={2}
-                                max={10}
-                                value={retryConfig.maxAttempts}
-                                onChange={(e) => updateRetry('maxAttempts', parseInt(e.target.value))}
-                                className="h-9 border-slate-200 focus:border-slate-300 focus:ring-0"
-                            />
+            {retryConfig.maxAttempts > 1 && (
+                <div className="space-y-1 animate-in fade-in slide-in-from-top-2">
+                    {/* Row: Max Attempts */}
+                    <div className="flex items-center gap-4 py-3 border-b border-slate-100 pl-8">
+                        <p className="text-[13px] text-slate-500 flex-1">Max Attempts</p>
+                        <Input
+                            type="number"
+                            min={2}
+                            max={10}
+                            value={retryConfig.maxAttempts}
+                            onChange={(e) => updateRetry('maxAttempts', parseInt(e.target.value))}
+                            className="w-16 h-8 text-[13px] text-right border-slate-200"
+                        />
+                    </div>
+
+                    {/* Row: Interventions */}
+                    <div className="py-3 border-b border-slate-100">
+                        <div className="flex items-center gap-4 pl-8">
+                            <p className="text-[13px] text-slate-500 flex-1">Interventions (Rules)</p>
+                            <button
+                                onClick={addIntervention}
+                                className="text-[12px] text-slate-400 hover:text-slate-600 flex items-center gap-1"
+                            >
+                                <Plus className="h-3.5 w-3.5" />
+                                Add Rule
+                            </button>
                         </div>
 
-                        {/* Interventions */}
-                        <div className="space-y-3">
-                            <div className="flex items-center justify-between">
-                                <span className="text-[12px] text-slate-500">Interventions (Rules)</span>
-                                <button
-                                    onClick={addIntervention}
-                                    className="text-[12px] text-slate-500 hover:text-slate-700 flex items-center gap-1 transition-colors"
-                                >
-                                    <Plus className="h-3.5 w-3.5" />
-                                    Add Rule
-                                </button>
-                            </div>
+                        {retryConfig.interventions.length === 0 && (
+                            <p className="text-[12px] text-slate-400 text-center py-3 pl-8">
+                                No rules defined
+                            </p>
+                        )}
 
-                            {retryConfig.interventions.length === 0 && (
-                                <p className="text-[12px] text-slate-400 text-center py-3">
-                                    No rules defined
-                                </p>
-                            )}
-
+                        <div className="space-y-2 mt-2 pl-8">
                             {retryConfig.interventions.map((rule, idx) => (
-                                <div key={idx} className="relative group p-3 bg-slate-50/50 rounded-lg space-y-2.5">
+                                <div key={idx} className="relative group flex items-center gap-2 p-2 bg-slate-50 rounded-lg text-[12px]">
+                                    <span className="text-slate-500">If Attempt #</span>
+                                    <Input
+                                        type="number"
+                                        className="w-12 h-6 text-[12px] text-center border-slate-200"
+                                        value={rule.attempt}
+                                        onChange={(e) => updateIntervention(idx, 'attempt', parseInt(e.target.value))}
+                                    />
+                                    <span className="text-slate-500">fails →</span>
+                                    <Select
+                                        value={rule.action}
+                                        onValueChange={(v) => updateIntervention(idx, 'action', v)}
+                                    >
+                                        <SelectTrigger className="h-6 w-28 text-[11px] border-slate-200">
+                                            <SelectValue />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="send_email">Send Email</SelectItem>
+                                            <SelectItem value="send_whatsapp">WhatsApp</SelectItem>
+                                            <SelectItem value="update_contact">Update Contact</SelectItem>
+                                        </SelectContent>
+                                    </Select>
                                     <button
-                                        className="absolute right-2 top-2 opacity-0 group-hover:opacity-100 transition-opacity text-slate-400 hover:text-red-500"
+                                        className="opacity-0 group-hover:opacity-100 transition-opacity text-slate-400 hover:text-red-500 ml-auto"
                                         onClick={() => removeIntervention(idx)}
                                     >
                                         <Trash2 className="h-3.5 w-3.5" />
                                     </button>
-
-                                    <div className="flex items-center gap-2 text-[12px] text-slate-600">
-                                        <span>If Attempt #</span>
-                                        <Input
-                                            type="number"
-                                            className="w-14 h-7 text-[12px] border-slate-200"
-                                            value={rule.attempt}
-                                            onChange={(e) => updateIntervention(idx, 'attempt', parseInt(e.target.value))}
-                                        />
-                                        <span>fails, then:</span>
-                                    </div>
-
-                                    <div className="flex items-center gap-2">
-                                        <Select
-                                            value={rule.action}
-                                            onValueChange={(v) => updateIntervention(idx, 'action', v)}
-                                        >
-                                            <SelectTrigger className="h-8 flex-1 text-[12px] border-slate-200">
-                                                <SelectValue />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="send_email">
-                                                    <div className="flex items-center gap-2"><Mail className="h-3 w-3" /> Send Email</div>
-                                                </SelectItem>
-                                                <SelectItem value="send_whatsapp">
-                                                    <div className="flex items-center gap-2"><MessageSquare className="h-3 w-3" /> WhatsApp</div>
-                                                </SelectItem>
-                                                <SelectItem value="update_contact">
-                                                    <div className="flex items-center gap-2"><UserCog className="h-3 w-3" /> Update Contact</div>
-                                                </SelectItem>
-                                            </SelectContent>
-                                        </Select>
-
-                                        {rule.action === 'send_email' && (
-                                            <Input
-                                                placeholder="Template ID"
-                                                className="flex-1 h-8 text-[12px] border-slate-200"
-                                                value={rule.templateId || ''}
-                                                onChange={(e) => updateIntervention(idx, 'templateId', e.target.value)}
-                                            />
-                                        )}
-                                        {rule.action === 'update_contact' && (
-                                            <span className="text-[11px] text-slate-500 px-2 py-1 bg-slate-100 rounded">
-                                                Group = Lost
-                                            </span>
-                                        )}
-                                    </div>
                                 </div>
                             ))}
                         </div>
-
-                        {/* One call per window */}
-                        <div className="flex items-center justify-between py-2">
-                            <div className="space-y-0.5">
-                                <p className="text-[12px] text-slate-600">One call per window</p>
-                                <p className="text-[11px] text-slate-400">
-                                    Limit to 1 attempt per active time block
-                                </p>
-                            </div>
-                            <Switch
-                                checked={retryConfig.oneCallPerWindow !== false}
-                                onCheckedChange={(c) => updateRetry('oneCallPerWindow', c)}
-                            />
-                        </div>
                     </div>
-                )}
-            </div>
+
+                    {/* Row: One call per window */}
+                    <div className="flex items-center gap-4 py-3 border-b border-slate-100 pl-8">
+                        <div className="flex-1">
+                            <p className="text-[13px] text-slate-500">One call per window</p>
+                            <p className="text-[11px] text-slate-400">Limit to 1 attempt per active time block</p>
+                        </div>
+                        <Switch
+                            checked={retryConfig.oneCallPerWindow !== false}
+                            onCheckedChange={(c) => updateRetry('oneCallPerWindow', c)}
+                        />
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

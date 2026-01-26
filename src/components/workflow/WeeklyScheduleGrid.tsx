@@ -116,10 +116,10 @@ export const WeeklyScheduleGrid = ({ value = [], onChange }: WeeklyScheduleGridP
                                         key={`slot-${dayIdx}-${hour}`}
                                         onClick={() => toggleSlot(dayIdx, hour, active)}
                                         className={cn(
-                                            "h-8 rounded-[2px] cursor-pointer transition-all duration-100 ease-out border border-transparent",
+                                            "h-8 rounded-[3px] cursor-pointer transition-all duration-100 ease-out",
                                             active
-                                                ? "bg-slate-800 hover:bg-slate-700 shadow-sm"
-                                                : "bg-slate-50 hover:bg-slate-100/80 hover:border-slate-200"
+                                                ? "bg-slate-300 hover:bg-slate-400"
+                                                : "bg-slate-100/80 hover:bg-slate-200/80"
                                         )}
                                         title={`${DAYS[dayIdx]} ${hour}:00`}
                                     />
