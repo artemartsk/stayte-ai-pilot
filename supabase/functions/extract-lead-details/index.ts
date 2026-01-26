@@ -313,6 +313,14 @@ ${featureList}
             console.log(`Applied +30% rule (overwrite): Budget ${result.budget} -> Max Budget ${result.max_budget}`);
         }
 
+        // VALIDATION: Ensure max_budget >= budget (swap if inverted)
+        if (result.budget && result.max_budget && result.max_budget < result.budget) {
+            console.log(`Budget inversion detected: ${result.budget} > ${result.max_budget}. Swapping.`);
+            const temp = result.budget;
+            result.budget = result.max_budget;
+            result.max_budget = temp;
+        }
+
         console.log('Extraction complete. location_ids:', result.location_ids, 'feature_ids:', result.feature_ids);
 
         return new Response(JSON.stringify(result), {
