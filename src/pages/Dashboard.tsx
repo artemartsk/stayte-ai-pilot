@@ -1,165 +1,279 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Users, Briefcase, Bot, TrendingUp } from 'lucide-react';
-import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { Users, Briefcase, Bot, TrendingUp, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import type { Tables } from '@/integrations/supabase/types';
+import { useAuth } from '@/contexts/AuthContext';
+import { StatsCard, LeadsChart, PipelineBreakdown, ActivityFeed, HotLeads } from '@/components/dashboard';
+
+interface DashboardStats {
+  totalLeads: number;
+  activeDeals: number;
+  aiTasks: number;
+  conversionRate: number;
+}
+
+interface LeadsByDay {
+  date: string;
+  count: number;
+}
+
+interface PipelineStatus {
+  status: string;
+  count: number;
+}
+
+interface Activity {
+  id: string;
+  type: 'email' | 'call' | 'sms' | 'status_change' | 'new_lead';
+  description: string;
+  contact_id?: string;
+  contact_name?: string;
+  created_at: string;
+}
+
+interface HotLead {
+  id: string;
+  name: string;
+  status: string;
+  budget?: number;
+  location?: string;
+  updated_at: string;
+}
+
 const Dashboard = () => {
-  const [recentContacts, setRecentContacts] = useState<Tables<'contacts'>[]>([]);
+  const { user } = useAuth();
   const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState<DashboardStats>({ totalLeads: 0, activeDeals: 0, aiTasks: 0, conversionRate: 0 });
+  const [leadsByDay, setLeadsByDay] = useState<LeadsByDay[]>([]);
+  const [pipelineData, setPipelineData] = useState<PipelineStatus[]>([]);
+  const [activities, setActivities] = useState<Activity[]>([]);
+  const [hotLeads, setHotLeads] = useState<HotLead[]>([]);
+
   useEffect(() => {
-    const fetchRecentContacts = async () => {
+    const fetchDashboardData = async () => {
+      if (!user?.agency_id) return;
+      setLoading(true);
+
       try {
-        const {
-          data,
-          error
-        } = await supabase.from('contacts').select('*').order('created_at', {
-          ascending: false
-        }).limit(5);
-        if (error) throw error;
-        setRecentContacts(data || []);
+        // 1. Total leads
+        const { count: totalLeads } = await supabase
+          .from('contacts')
+          .select('*', { count: 'exact', head: true })
+          .eq('agency_id', user.agency_id);
+
+        // 2. Active deals
+        const { count: activeDeals } = await supabase
+          .from('deals')
+          .select('*', { count: 'exact', head: true })
+          .eq('agency_id', user.agency_id)
+          .in('status', ['active', 'negotiation', 'viewing_scheduled']);
+
+        // 3. AI tasks pending
+        const { count: aiTasks } = await supabase
+          .from('ai_tasks')
+          .select('*', { count: 'exact', head: true })
+          .eq('agency_id', user.agency_id)
+          .eq('status', 'pending');
+
+        // 4. Won deals for conversion
+        const { count: wonDeals } = await supabase
+          .from('deals')
+          .select('*', { count: 'exact', head: true })
+          .eq('agency_id', user.agency_id)
+          .eq('status', 'won');
+
+        const conversionRate = totalLeads && totalLeads > 0
+          ? Math.round((wonDeals || 0) / totalLeads * 100 * 10) / 10
+          : 0;
+
+        setStats({
+          totalLeads: totalLeads || 0,
+          activeDeals: activeDeals || 0,
+          aiTasks: aiTasks || 0,
+          conversionRate
+        });
+
+        // 5. Leads by day (last 30 days)
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+        const { data: leadsData } = await supabase
+          .from('contacts')
+          .select('created_at')
+          .eq('agency_id', user.agency_id)
+          .gte('created_at', thirtyDaysAgo.toISOString());
+
+        const leadCounts: Record<string, number> = {};
+        leadsData?.forEach(lead => {
+          const date = new Date(lead.created_at).toISOString().split('T')[0];
+          leadCounts[date] = (leadCounts[date] || 0) + 1;
+        });
+
+        const leadsByDayData = Object.entries(leadCounts)
+          .map(([date, count]) => ({ date, count }))
+          .sort((a, b) => a.date.localeCompare(b.date));
+        setLeadsByDay(leadsByDayData);
+
+        // 6. Pipeline breakdown
+        const { data: statusData } = await supabase
+          .from('contacts')
+          .select('current_status')
+          .eq('agency_id', user.agency_id);
+
+        const statusCounts: Record<string, number> = {};
+        statusData?.forEach(c => {
+          const status = c.current_status || 'new';
+          statusCounts[status] = (statusCounts[status] || 0) + 1;
+        });
+
+        setPipelineData(
+          Object.entries(statusCounts)
+            .map(([status, count]) => ({ status, count }))
+            .sort((a, b) => b.count - a.count)
+        );
+
+        // 7. Recent activity (from contact_communications)
+        const { data: commsData } = await supabase
+          .from('contact_communications')
+          .select('id, channel, subject, contact_id, created_at, contacts(first_name, last_name)')
+          .eq('agency_id', user.agency_id)
+          .order('created_at', { ascending: false })
+          .limit(8);
+
+        const activitiesData: Activity[] = (commsData || []).map((c: any) => ({
+          id: c.id,
+          type: c.channel === 'email' ? 'email' : c.channel === 'call' ? 'call' : 'sms',
+          description: c.subject || `${c.channel} sent`,
+          contact_id: c.contact_id,
+          contact_name: [c.contacts?.first_name, c.contacts?.last_name].filter(Boolean).join(' '),
+          created_at: c.created_at
+        }));
+        setActivities(activitiesData);
+
+        // 8. Hot leads
+        const { data: hotData } = await supabase
+          .from('contacts')
+          .select('id, first_name, last_name, current_status, updated_at, deals(budget_max, locations)')
+          .eq('agency_id', user.agency_id)
+          .in('current_status', ['qualified', 'negotiation'])
+          .order('updated_at', { ascending: false })
+          .limit(5);
+
+        const hotLeadsData: HotLead[] = (hotData || []).map((c: any) => ({
+          id: c.id,
+          name: [c.first_name, c.last_name].filter(Boolean).join(' ') || 'Unknown',
+          status: c.current_status,
+          budget: c.deals?.[0]?.budget_max,
+          location: c.deals?.[0]?.locations?.[0],
+          updated_at: c.updated_at
+        }));
+        setHotLeads(hotLeadsData);
+
       } catch (error) {
-        console.error('Error fetching contacts:', error);
+        console.error('Dashboard fetch error:', error);
       } finally {
         setLoading(false);
       }
     };
-    fetchRecentContacts();
-  }, []);
-  const stats = [{
-    title: "Total Leads",
-    value: "248",
-    change: "+12%",
-    icon: Users,
-    href: "/contacts",
-    color: "text-primary"
-  }, {
-    title: "Active Deals",
-    value: "37",
-    change: "+8%",
-    icon: Briefcase,
-    href: "/deals",
-    color: "text-success"
-  }, {
-    title: "AI Tasks in Queue",
-    value: "15",
-    change: "-3%",
-    icon: Bot,
-    href: "/ai/tasks",
-    color: "text-info"
-  }, {
-    title: "Conversion Rate",
-    value: "24.5%",
-    change: "+5.2%",
-    icon: TrendingUp,
-    href: "/deals",
-    color: "text-warning"
-  }];
-  return <div className="p-6 space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">Dashboard</h1>
-        <p className="text-muted-foreground mt-1">
-          Overview of your agency activity
+
+    fetchDashboardData();
+  }, [user?.agency_id]);
+
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <div className="border-b border-border px-8 py-6">
+        <h1 className="text-2xl font-semibold text-foreground">Dashboard</h1>
+        <p className="text-[13px] text-muted-foreground mt-1">
+          Overview of your agency performance
         </p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {stats.map(stat => <Link key={stat.title} to={stat.href}>
-            <Card className="hover:shadow-md transition-shadow cursor-pointer">
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
-                  {stat.title}
-                </CardTitle>
-                <stat.icon className={`h-5 w-5 ${stat.color}`} />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{stat.value}</div>
-                <p className="text-xs text-muted-foreground mt-1">
-                  <span className={stat.change.startsWith("+") ? "text-success" : "text-destructive"}>
-                    {stat.change}
-                  </span>
-                  {" "}from last month
-                </p>
-              </CardContent>
-            </Card>
-          </Link>)}
-      </div>
+      {/* Content */}
+      <div className="px-8 py-6 space-y-8">
+        {/* Stats Row */}
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <StatsCard
+            title="Total Leads"
+            value={stats.totalLeads}
+            icon={Users}
+            href="/contacts"
+            loading={loading}
+          />
+          <StatsCard
+            title="Active Deals"
+            value={stats.activeDeals}
+            icon={Briefcase}
+            href="/deals"
+            loading={loading}
+          />
+          <StatsCard
+            title="AI Tasks Pending"
+            value={stats.aiTasks}
+            icon={Bot}
+            href="/ai/tasks"
+            loading={loading}
+          />
+          <StatsCard
+            title="Conversion Rate"
+            value={`${stats.conversionRate}%`}
+            icon={TrendingUp}
+            loading={loading}
+          />
+        </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>New Leads </CardTitle>
-            <CardDescription>
-              {loading ? 'Loading...' : `${recentContacts.length} recently added`}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {loading ? <div className="text-sm text-muted-foreground">Loading contacts...</div> : recentContacts.length === 0 ? <div className="text-sm text-muted-foreground">No contacts yet</div> : recentContacts.map(contact => {
-              const initials = `${contact.first_name?.[0] || ''}${contact.last_name?.[0] || ''}`.toUpperCase() || 'C';
-              const fullName = [contact.first_name, contact.last_name].filter(Boolean).join(' ') || 'Unknown';
-              const isHot = contact.current_status === 'qualified' || contact.current_status === 'negotiation';
-              const getStatusLabel = (status: string | null) => {
-                const variants: Record<string, string> = {
-                  new: "New",
-                  ai_contacting: "AI Contacting",
-                  qualified: "Qualified",
-                  negotiation: "Negotiation",
-                  won: "Won",
-                  lost: "Lost",
-                  canceled: "Canceled",
-                  lead: "Lead",
-                  client: "Client"
-                };
-                return status ? variants[status] || status : 'No status';
-              };
-              return <Link key={contact.id} to={`/contacts/${contact.id}`}>
-                      <div className="flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-gray-800 -mx-2 px-2 py-1 rounded transition-colors">
-                        <div className="h-10 w-10 rounded-full bg-primary/10 text-primary flex items-center justify-center text-sm font-medium">
-                          {initials}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium">{fullName}</p>
-                          <p className="text-xs text-muted-foreground truncate">
-                            {getStatusLabel(contact.current_status)}
-                            {isHot && ' 🔥'}
-                          </p>
-                        </div>
-                        <div className="text-xs text-muted-foreground">
-                          {contact.created_at && new Date(contact.created_at).toLocaleDateString()}
-                        </div>
-                      </div>
-                    </Link>;
-            })}
+        {/* Charts Row */}
+        <div className="grid gap-6 lg:grid-cols-5">
+          {/* Leads Chart - takes 3 cols */}
+          <div className="lg:col-span-3 p-5 border border-border rounded-xl bg-background">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="text-[14px] font-medium text-foreground">Leads Over Time</h3>
+                <p className="text-[12px] text-muted-foreground">Last 30 days</p>
+              </div>
             </div>
-          </CardContent>
-        </Card>
+            <LeadsChart data={leadsByDay} loading={loading} />
+          </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Active Deals</CardTitle>
-            <CardDescription>Require attention</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {[1, 2, 3, 4, 5].map(i => <div key={i} className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-full bg-success/10 text-success flex items-center justify-center text-sm font-medium">
-                    D{i}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium">Deal #{i}000{i}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {i % 2 === 0 ? "Sale" : "Rent"} • In Progress
-                    </p>
-                  </div>
-                  <div className="text-xs text-muted-foreground">
-                    {i}d ago
-                  </div>
-                </div>)}
+          {/* Pipeline - takes 2 cols */}
+          <div className="lg:col-span-2 p-5 border border-border rounded-xl bg-background">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="text-[14px] font-medium text-foreground">Pipeline Breakdown</h3>
+                <p className="text-[12px] text-muted-foreground">Leads by status</p>
+              </div>
             </div>
-          </CardContent>
-        </Card>
+            <PipelineBreakdown data={pipelineData} loading={loading} />
+          </div>
+        </div>
+
+        {/* Activity + Hot Leads Row */}
+        <div className="grid gap-6 lg:grid-cols-2">
+          {/* Activity Feed */}
+          <div className="p-5 border border-border rounded-xl bg-background">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-[14px] font-medium text-foreground">Recent Activity</h3>
+              <Link to="/contacts" className="text-[12px] text-muted-foreground hover:text-foreground flex items-center gap-1">
+                See all <ArrowRight className="w-3 h-3" />
+              </Link>
+            </div>
+            <ActivityFeed activities={activities} loading={loading} />
+          </div>
+
+          {/* Hot Leads */}
+          <div className="p-5 border border-border rounded-xl bg-background">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-[14px] font-medium text-foreground">Hot Leads 🔥</h3>
+              <Link to="/contacts?status=qualified" className="text-[12px] text-muted-foreground hover:text-foreground flex items-center gap-1">
+                See all <ArrowRight className="w-3 h-3" />
+              </Link>
+            </div>
+            <HotLeads leads={hotLeads} loading={loading} />
+          </div>
+        </div>
       </div>
-    </div>;
+    </div>
+  );
 };
+
 export default Dashboard;
