@@ -430,68 +430,45 @@ Deno.serve(async (req) => {
 
                             // ... (skipping to function definition)
 
-                            async function executeNurtureStep(contact: any, config: any, timeWindows: any[], agencyId: string, supabase: any) {
+                            async function executeNurtureStep(contact: any, config: any, _timeWindows: any[], agencyId: string, _supabase: any) {
                                 console.log(`Executing Nurture Step for contact ${contact.id}`);
 
-                                if (!contact.current_deal_id) {
-                                    return {
-                                        success: false,
-                                        error: 'No active deal found for contact'
-                                    }
-                                }
-
-                                const dayMap: Record<string, number> = {
-                                    'monday': 1, 'mon': 1,
-                                    'tuesday': 2, 'tue': 2,
-                                    'wednesday': 3, 'wed': 3,
-                                    'thursday': 4, 'thu': 4,
-                                    'friday': 5, 'fri': 5,
-                                    'saturday': 6, 'sat': 6,
-                                    'sunday': 7, 'sun': 7
-                                }
-
-                                // Determine Day and Time
-                                // Priority: 1. timeWindows (first available slot), 2. config.day/time, 3. Default (Mon 09:00)
-                                let nurtureDay = 1;
-                                let nurtureTime = '09:00';
-
-                                if (timeWindows && timeWindows.length > 0) {
-                                    // e.g. [{ days: ['mon', 'wed'], start: '09:00', end: '12:00' }]
-                                    // We pick the first day of the first window and the start time
-                                    const firstWindow = timeWindows[0];
-                                    if (firstWindow.days && firstWindow.days.length > 0) {
-                                        const firstDayStr = String(firstWindow.days[0]).toLowerCase();
-                                        nurtureDay = dayMap[firstDayStr] || 1;
-                                    }
-                                    if (firstWindow.start) {
-                                        nurtureTime = firstWindow.start;
-                                    }
-                                } else {
-                                    // Fallback to config or default
-                                    const requestedDay = String(config?.day || 'monday').toLowerCase();
-                                    nurtureDay = dayMap[requestedDay] || 1;
-                                    nurtureTime = config?.time || '09:00';
-                                }
+                                const includeAgentIntro = config?.agentIntroduction !== false;
+                                const channel = config?.channel || 'email'; // 'email' or 'whatsapp'
 
                                 try {
-                                    const { error } = await supabase
-                                        .from('deals')
-                                        .update({
-                                            nurture_enabled: true,
-                                            nurture_day: nurtureDay,
-                                            nurture_time: nurtureTime,
+                                    // Call separate send-nurture Edge Function
+                                    const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? '';
+                                    const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
+
+                                    console.log(`Calling send-nurture function for contact ${contact.id} via ${channel}`);
+
+                                    const res = await fetch(`${supabaseUrl}/functions/v1/send-nurture`, {
+                                        method: 'POST',
+                                        headers: {
+                                            'Authorization': `Bearer ${serviceKey}`,
+                                            'Content-Type': 'application/json'
+                                        },
+                                        body: JSON.stringify({
+                                            contact_id: contact.id,
+                                            agency_id: agencyId,
+                                            channel: channel,
+                                            include_agent_intro: includeAgentIntro
                                         })
-                                        .eq('id', contact.current_deal_id)
+                                    });
 
-                                    if (error) throw error
+                                    const result = await res.json();
 
-                                    return {
-                                        success: true,
-                                        message: `Nurturing enabled for deal ${contact.current_deal_id} (Day: ${nurtureDay}, Time: ${nurtureTime})`
-                                    };
+                                    if (!res.ok) {
+                                        console.error('send-nurture failed:', result);
+                                        return { success: false, error: result.error || 'Nurture failed' };
+                                    }
+
+                                    console.log('send-nurture result:', result);
+                                    return result;
 
                                 } catch (err: any) {
-                                    console.error('Error enabling nurture:', err);
+                                    console.error('Error calling send-nurture:', err);
                                     return { success: false, error: err.message };
                                 }
                             }

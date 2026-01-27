@@ -4,7 +4,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Copy, Mail, Check, Plus, Trash2 } from 'lucide-react';
+import { Copy, Mail, Check, Plus, Trash2, Upload, Palette } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -19,6 +19,129 @@ import {
     DialogClose
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+
+// Branding Tab Content
+const BrandingTab = () => {
+    const { user } = useAuth();
+    const queryClient = useQueryClient();
+    const [logoUrl, setLogoUrl] = React.useState('');
+    const [primaryColor, setPrimaryColor] = React.useState('#1a1a1a');
+    const [isSaving, setIsSaving] = React.useState(false);
+
+    // Fetch current agency settings
+    const { data: agency, isLoading } = useQuery({
+        queryKey: ['agency-branding', user?.agency_id],
+        queryFn: async () => {
+            if (!user?.agency_id) return null;
+            const { data, error } = await supabase
+                .from('agencies')
+                .select('name, logo_url, primary_color')
+                .eq('id', user.agency_id)
+                .single();
+            if (error) throw error;
+            return data;
+        },
+        enabled: !!user?.agency_id
+    });
+
+    React.useEffect(() => {
+        if (agency) {
+            setLogoUrl(agency.logo_url || '');
+            setPrimaryColor(agency.primary_color || '#1a1a1a');
+        }
+    }, [agency]);
+
+    const handleSave = async () => {
+        if (!user?.agency_id) return;
+        setIsSaving(true);
+        try {
+            const { error } = await supabase
+                .from('agencies')
+                .update({ logo_url: logoUrl || null, primary_color: primaryColor })
+                .eq('id', user.agency_id);
+            if (error) throw error;
+            queryClient.invalidateQueries({ queryKey: ['agency-branding'] });
+            toast.success('Branding settings saved');
+        } catch (err: any) {
+            toast.error(err.message || 'Failed to save');
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
+    if (isLoading) {
+        return <div className="text-muted-foreground">Loading...</div>;
+    }
+
+    return (
+        <div className="space-y-8 max-w-2xl">
+            {/* Agency Name */}
+            <div>
+                <h2 className="text-lg font-medium mb-1">{agency?.name || 'Your Agency'}</h2>
+                <p className="text-sm text-muted-foreground">
+                    Customize how your agency appears in client emails.
+                </p>
+            </div>
+
+            {/* Logo URL */}
+            <div className="space-y-2">
+                <Label className="text-sm font-medium">Logo URL</Label>
+                <div className="flex gap-3">
+                    <Input
+                        value={logoUrl}
+                        onChange={(e) => setLogoUrl(e.target.value)}
+                        placeholder="https://example.com/logo.png"
+                        className="flex-1"
+                    />
+                    {logoUrl && (
+                        <div className="w-12 h-12 border rounded flex items-center justify-center bg-muted overflow-hidden">
+                            <img src={logoUrl} alt="Logo preview" className="max-h-full max-w-full object-contain" />
+                        </div>
+                    )}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                    Direct link to your logo image. Recommended size: 200×50px.
+                </p>
+            </div>
+
+            {/* Primary Color */}
+            <div className="space-y-2">
+                <Label className="text-sm font-medium">Brand Color</Label>
+                <div className="flex gap-3 items-center">
+                    <input
+                        type="color"
+                        value={primaryColor}
+                        onChange={(e) => setPrimaryColor(e.target.value)}
+                        className="w-12 h-12 rounded border cursor-pointer"
+                    />
+                    <Input
+                        value={primaryColor}
+                        onChange={(e) => setPrimaryColor(e.target.value)}
+                        placeholder="#1a1a1a"
+                        className="w-32 font-mono"
+                    />
+                    <div
+                        className="px-4 py-2 rounded text-white text-sm font-medium"
+                        style={{ backgroundColor: primaryColor }}
+                    >
+                        Preview
+                    </div>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                    Used for buttons and accents in client emails.
+                </p>
+            </div>
+
+            {/* Save Button */}
+            <div className="pt-4 border-t">
+                <Button onClick={handleSave} disabled={isSaving}>
+                    {isSaving ? 'Saving...' : 'Save Changes'}
+                </Button>
+            </div>
+        </div>
+    );
+};
+
 
 // Integrations Tab Content
 const IntegrationsTab = () => {
@@ -390,6 +513,7 @@ const Settings = () => {
                     <TabsList className="mb-8">
                         <TabsTrigger value="integrations">Integrations</TabsTrigger>
                         <TabsTrigger value="sources">Lead Sources</TabsTrigger>
+                        <TabsTrigger value="branding">Branding</TabsTrigger>
                     </TabsList>
 
                     <TabsContent value="integrations">
@@ -398,6 +522,10 @@ const Settings = () => {
 
                     <TabsContent value="sources">
                         <LeadSourcesTab />
+                    </TabsContent>
+
+                    <TabsContent value="branding">
+                        <BrandingTab />
                     </TabsContent>
                 </Tabs>
             </div>
