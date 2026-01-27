@@ -26,6 +26,7 @@ export type Intervention = {
 };
 
 export type RetryConfig = {
+    enabled?: boolean;
     maxAttempts: number;
     backoff: 'smart_morning_evening' | 'fixed_24h';
     interventions: Intervention[];
@@ -522,12 +523,21 @@ export const CallInput = ({ value, onChange }: CallInputProps) => {
                 <RefreshCw className="h-4 w-4 text-slate-400 shrink-0" />
                 <p className="text-[13px] text-slate-700 flex-1">Smart Retry Logic</p>
                 <Switch
-                    checked={retryConfig.maxAttempts > 1}
-                    onCheckedChange={(c) => updateRetry('maxAttempts', c ? 3 : 1)}
+                    checked={retryConfig.enabled !== false && retryConfig.maxAttempts > 1}
+                    onCheckedChange={(c) => {
+                        onChange({
+                            ...value,
+                            retryConfig: {
+                                ...retryConfig,
+                                enabled: c,
+                                maxAttempts: c ? Math.max(retryConfig.maxAttempts, 2) : 1
+                            }
+                        });
+                    }}
                 />
             </div>
 
-            {retryConfig.maxAttempts > 1 && (
+            {(retryConfig.enabled !== false && retryConfig.maxAttempts > 1) && (
                 <div className="space-y-1 animate-in fade-in slide-in-from-top-2">
                     {/* Row: Max Attempts */}
                     <div className="flex items-center gap-4 py-3 border-b border-slate-100 pl-8">

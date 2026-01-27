@@ -379,9 +379,42 @@ Deno.serve(async (req) => {
                             break
 
                         case 'assign_agent':
-                            // Auto-assign agent using configured strategy
-                            actionResult = await executeAssignAgent(contact, run.agency_id, supabase, currentNode.data.config)
-                            success = actionResult.success
+                            // Call the external assign-agent Edge Function
+                            const strategy = currentNode.data.config?.strategy || 'smart'
+                            console.log(`Calling assign-agent function for contact ${contact.id} with strategy: ${strategy}`)
+
+                            // Get the deal for this contact
+                            const { data: dealForAssign } = await supabase
+                                .from('deals')
+                                .select('id')
+                                .eq('contact_id', contact.id)
+                                .order('created_at', { ascending: false })
+                                .limit(1)
+                                .maybeSingle()
+
+                            if (!dealForAssign) {
+                                console.warn(`No deal found for contact ${contact.id}, cannot assign agent`)
+                                actionResult = { success: false, error: 'No deal found for contact' }
+                                success = false
+                            } else {
+                                const { data: assignResult, error: assignError } = await supabase.functions.invoke('assign-agent', {
+                                    body: {
+                                        deal_id: dealForAssign.id,
+                                        agency_id: run.agency_id,
+                                        strategy: strategy
+                                    }
+                                })
+
+                                if (assignError) {
+                                    console.error('assign-agent function error:', assignError)
+                                    actionResult = { success: false, error: assignError.message }
+                                    success = false
+                                } else {
+                                    console.log('assign-agent result:', assignResult)
+                                    actionResult = assignResult
+                                    success = assignResult?.success ?? true
+                                }
+                            }
                             break
 
                         case 'mark_as_lost':
@@ -1085,7 +1118,7 @@ async function processAssignment(contact: any, deal: any, agents: any[], agencyI
     }
 
     // Update contact
-    await supabase
+    const { error: contactUpdateError, data: updatedContact } = await supabase
         .from('contacts')
         .update({
             assigned_agent_id: selectedAgent.id,
@@ -1093,6 +1126,14 @@ async function processAssignment(contact: any, deal: any, agents: any[], agencyI
             current_status: 'assigned'
         })
         .eq('id', contact.id)
+        .select('id, owner')
+        .single()
+
+    if (contactUpdateError) {
+        console.error(`Failed to update contact ${contact.id} owner to ${selectedAgent.id}:`, contactUpdateError)
+    } else {
+        console.log(`Successfully updated contact ${contact.id} owner to: ${updatedContact?.owner}`);
+    }
 
     return {
         success: true,
