@@ -27,6 +27,9 @@ const BrandingTab = () => {
     const [logoUrl, setLogoUrl] = React.useState('');
     const [primaryColor, setPrimaryColor] = React.useState('#1a1a1a');
     const [isSaving, setIsSaving] = React.useState(false);
+    const [isUploading, setIsUploading] = React.useState(false);
+    const [isDragging, setIsDragging] = React.useState(false);
+    const fileInputRef = React.useRef<HTMLInputElement>(null);
 
     // Fetch current agency settings
     const { data: agency, isLoading } = useQuery({
@@ -51,6 +54,48 @@ const BrandingTab = () => {
         }
     }, [agency]);
 
+    const handleFileUpload = async (file: File) => {
+        if (!user?.agency_id) return;
+        if (!file.type.startsWith('image/')) {
+            toast.error('Please upload an image file');
+            return;
+        }
+        if (file.size > 2 * 1024 * 1024) {
+            toast.error('File size must be less than 2MB');
+            return;
+        }
+
+        setIsUploading(true);
+        try {
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${user.agency_id}/logo.${fileExt}`;
+
+            const { error: uploadError } = await supabase.storage
+                .from('agency-assets')
+                .upload(fileName, file, { upsert: true });
+
+            if (uploadError) throw uploadError;
+
+            const { data: { publicUrl } } = supabase.storage
+                .from('agency-assets')
+                .getPublicUrl(fileName);
+
+            setLogoUrl(publicUrl);
+            toast.success('Logo uploaded');
+        } catch (err: any) {
+            toast.error(err.message || 'Upload failed');
+        } finally {
+            setIsUploading(false);
+        }
+    };
+
+    const handleDrop = (e: React.DragEvent) => {
+        e.preventDefault();
+        setIsDragging(false);
+        const file = e.dataTransfer.files[0];
+        if (file) handleFileUpload(file);
+    };
+
     const handleSave = async () => {
         if (!user?.agency_id) return;
         setIsSaving(true);
@@ -61,7 +106,7 @@ const BrandingTab = () => {
                 .eq('id', user.agency_id);
             if (error) throw error;
             queryClient.invalidateQueries({ queryKey: ['agency-branding'] });
-            toast.success('Branding settings saved');
+            toast.success('Settings saved');
         } catch (err: any) {
             toast.error(err.message || 'Failed to save');
         } finally {
@@ -69,73 +114,124 @@ const BrandingTab = () => {
         }
     };
 
+    const handleRemoveLogo = () => {
+        setLogoUrl('');
+    };
+
     if (isLoading) {
-        return <div className="text-muted-foreground">Loading...</div>;
+        return <div className="text-muted-foreground py-12 text-center">Loading...</div>;
     }
 
     return (
-        <div className="space-y-8 max-w-2xl">
-            {/* Agency Name */}
-            <div>
-                <h2 className="text-lg font-medium mb-1">{agency?.name || 'Your Agency'}</h2>
-                <p className="text-sm text-muted-foreground">
-                    Customize how your agency appears in client emails.
-                </p>
-            </div>
-
-            {/* Logo URL */}
-            <div className="space-y-2">
-                <Label className="text-sm font-medium">Logo URL</Label>
-                <div className="flex gap-3">
-                    <Input
-                        value={logoUrl}
-                        onChange={(e) => setLogoUrl(e.target.value)}
-                        placeholder="https://example.com/logo.png"
-                        className="flex-1"
-                    />
-                    {logoUrl && (
-                        <div className="w-12 h-12 border rounded flex items-center justify-center bg-muted overflow-hidden">
-                            <img src={logoUrl} alt="Logo preview" className="max-h-full max-w-full object-contain" />
-                        </div>
-                    )}
+        <div className="max-w-xl">
+            {/* Section: Logo */}
+            <div className="mb-10">
+                <div className="flex items-center gap-2 mb-1">
+                    <span className="text-[13px] font-medium text-foreground">Agency Logo</span>
                 </div>
-                <p className="text-xs text-muted-foreground">
-                    Direct link to your logo image. Recommended size: 200×50px.
+                <p className="text-[13px] text-muted-foreground mb-4">
+                    Displayed in email headers. Recommended: PNG with transparency, 400×100px.
                 </p>
+
+                {logoUrl ? (
+                    <div className="group relative inline-block">
+                        <div className="h-20 px-6 py-4 bg-muted/50 rounded-lg border border-border flex items-center justify-center">
+                            <img
+                                src={logoUrl}
+                                alt="Agency logo"
+                                className="max-h-12 max-w-[200px] object-contain"
+                            />
+                        </div>
+                        <button
+                            onClick={handleRemoveLogo}
+                            className="absolute -top-2 -right-2 w-6 h-6 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-xs"
+                        >
+                            ×
+                        </button>
+                    </div>
+                ) : (
+                    <div
+                        onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+                        onDragLeave={() => setIsDragging(false)}
+                        onDrop={handleDrop}
+                        onClick={() => fileInputRef.current?.click()}
+                        className={`
+                            border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-all
+                            ${isDragging
+                                ? 'border-primary bg-primary/5'
+                                : 'border-border hover:border-muted-foreground/50 hover:bg-muted/30'
+                            }
+                        `}
+                    >
+                        <input
+                            ref={fileInputRef}
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => e.target.files?.[0] && handleFileUpload(e.target.files[0])}
+                            className="hidden"
+                        />
+                        <div className="flex flex-col items-center gap-2">
+                            <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
+                                <Upload className="w-5 h-5 text-muted-foreground" />
+                            </div>
+                            <div>
+                                <span className="text-[13px] font-medium text-foreground">
+                                    {isUploading ? 'Uploading...' : 'Drop logo here'}
+                                </span>
+                                <p className="text-[12px] text-muted-foreground mt-0.5">
+                                    or click to browse
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
 
-            {/* Primary Color */}
-            <div className="space-y-2">
-                <Label className="text-sm font-medium">Brand Color</Label>
-                <div className="flex gap-3 items-center">
-                    <input
-                        type="color"
-                        value={primaryColor}
-                        onChange={(e) => setPrimaryColor(e.target.value)}
-                        className="w-12 h-12 rounded border cursor-pointer"
-                    />
+            {/* Section: Brand Color */}
+            <div className="mb-10">
+                <div className="flex items-center gap-2 mb-1">
+                    <span className="text-[13px] font-medium text-foreground">Brand Color</span>
+                </div>
+                <p className="text-[13px] text-muted-foreground mb-4">
+                    Used for buttons and links in client emails.
+                </p>
+
+                <div className="flex items-center gap-4">
+                    <div className="relative">
+                        <input
+                            type="color"
+                            value={primaryColor}
+                            onChange={(e) => setPrimaryColor(e.target.value)}
+                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                        />
+                        <div
+                            className="w-10 h-10 rounded-lg border border-border shadow-sm cursor-pointer"
+                            style={{ backgroundColor: primaryColor }}
+                        />
+                    </div>
                     <Input
                         value={primaryColor}
                         onChange={(e) => setPrimaryColor(e.target.value)}
-                        placeholder="#1a1a1a"
-                        className="w-32 font-mono"
+                        className="w-28 font-mono text-[13px] h-10"
+                        placeholder="#000000"
                     />
                     <div
-                        className="px-4 py-2 rounded text-white text-sm font-medium"
+                        className="px-4 h-10 rounded-lg text-white text-[13px] font-medium flex items-center"
                         style={{ backgroundColor: primaryColor }}
                     >
-                        Preview
+                        Button Preview
                     </div>
                 </div>
-                <p className="text-xs text-muted-foreground">
-                    Used for buttons and accents in client emails.
-                </p>
             </div>
 
-            {/* Save Button */}
-            <div className="pt-4 border-t">
-                <Button onClick={handleSave} disabled={isSaving}>
-                    {isSaving ? 'Saving...' : 'Save Changes'}
+            {/* Save */}
+            <div className="pt-6 border-t border-border">
+                <Button
+                    onClick={handleSave}
+                    disabled={isSaving}
+                    className="h-9 px-4 text-[13px]"
+                >
+                    {isSaving ? 'Saving...' : 'Save changes'}
                 </Button>
             </div>
         </div>
