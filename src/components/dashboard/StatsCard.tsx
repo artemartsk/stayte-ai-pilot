@@ -12,26 +12,18 @@ interface StatsCardProps {
 
 export function StatsCard({ title, value, change, icon: Icon, href, loading }: StatsCardProps) {
     const content = (
-        <div className="group p-5 bg-background border border-border rounded-xl hover:border-muted-foreground/30 transition-all cursor-pointer">
-            <div className="flex items-start justify-between">
-                <div className="space-y-2">
-                    <p className="text-[13px] text-muted-foreground font-medium">{title}</p>
+        <div className="group p-4 bg-background border border-border rounded-lg hover:border-muted-foreground/30 transition-all cursor-pointer">
+            <div className="flex items-center justify-between gap-3">
+                <div className="min-w-0">
+                    <p className="text-[12px] text-muted-foreground font-medium truncate">{title}</p>
                     {loading ? (
-                        <div className="h-8 w-16 bg-muted animate-pulse rounded" />
+                        <div className="h-6 w-12 bg-muted animate-pulse rounded mt-1" />
                     ) : (
-                        <p className="text-[28px] font-semibold tracking-tight text-foreground">{value}</p>
-                    )}
-                    {change && (
-                        <p className="text-[12px] font-medium">
-                            <span className={change.startsWith('+') ? 'text-emerald-600' : change.startsWith('-') ? 'text-rose-600' : 'text-muted-foreground'}>
-                                {change}
-                            </span>
-                            <span className="text-muted-foreground ml-1">vs last month</span>
-                        </p>
+                        <p className="text-[22px] font-semibold tracking-tight text-foreground mt-0.5">{value}</p>
                     )}
                 </div>
-                <div className="p-2 rounded-lg bg-muted/50 group-hover:bg-muted transition-colors">
-                    <Icon className="h-5 w-5 text-muted-foreground" />
+                <div className="p-1.5 rounded-md bg-muted/50 flex-shrink-0">
+                    <Icon className="h-4 w-4 text-muted-foreground" />
                 </div>
             </div>
         </div>
