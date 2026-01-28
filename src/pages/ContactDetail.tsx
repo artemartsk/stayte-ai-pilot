@@ -88,6 +88,7 @@ const ContactDetail = () => {
   const defaultTab = searchParams.get("tab") || "overview";
   const [activeTab, setActiveTab] = useState(defaultTab);
   const [editingDeal, setEditingDeal] = useState<any>(null);
+  const [sendingBatch, setSendingBatch] = useState<string | null>(null);
 
   // Realtime subscription for updates
   useEffect(() => {
@@ -876,7 +877,9 @@ const ContactDetail = () => {
                   <Badge variant="secondary" className="text-[10px] h-5 px-2 font-normal bg-muted/60 text-muted-foreground">{selection.status}</Badge>
                   <div className="ml-auto flex items-center gap-2">
                     <button
+                      disabled={sendingBatch === selection.id}
                       onClick={() => {
+                        setSendingBatch(selection.id);
                         fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-nurture`, {
                           method: 'POST',
                           headers: {
@@ -890,18 +893,26 @@ const ContactDetail = () => {
                             channel: 'email'
                           })
                         }).then(res => res.json()).then(data => {
+                          setSendingBatch(null);
                           if (data.error) {
                             toast.error(data.error);
                           } else {
                             toast.success('Selection sent via Email!');
                             queryClient.invalidateQueries({ queryKey: ['contact-selections', id] });
                           }
-                        }).catch(err => toast.error(err.message));
+                        }).catch(err => {
+                          setSendingBatch(null);
+                          toast.error(err.message);
+                        });
                       }}
-                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors disabled:opacity-50"
                     >
-                      <Mail className="w-3.5 h-3.5" />
-                      {selection.status === 'sent' ? 'Resend' : 'Send Email'}
+                      {sendingBatch === selection.id ? (
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      ) : (
+                        <Mail className="w-3.5 h-3.5" />
+                      )}
+                      {sendingBatch === selection.id ? 'Sending...' : selection.status === 'sent' ? 'Resend' : 'Send Email'}
                     </button>
                     <button
                       disabled
