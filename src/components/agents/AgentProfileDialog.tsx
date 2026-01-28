@@ -162,7 +162,7 @@ export function AgentProfileDialog({ agentId, agentName, open, onOpenChange }: A
     if (isLoading || !localData) {
         return (
             <Sheet open={open} onOpenChange={handleClose}>
-                <SheetContent className="w-[500px] sm:w-[540px] p-0">
+                <SheetContent className="w-[50vw] sm:max-w-[50vw] p-0">
                     <div className="animate-pulse p-6 space-y-4">
                         <div className="h-20 w-20 bg-muted rounded-full" />
                         <div className="h-4 bg-muted rounded w-1/3" />
@@ -182,7 +182,7 @@ export function AgentProfileDialog({ agentId, agentName, open, onOpenChange }: A
 
     return (
         <Sheet open={open} onOpenChange={handleClose}>
-            <SheetContent className="w-[500px] sm:w-[540px] p-0 overflow-hidden">
+            <SheetContent className="w-[50vw] sm:max-w-[50vw] p-0 overflow-hidden">
                 <div className="h-full flex flex-col">
                     {/* Header with Avatar */}
                     <div className="p-6 border-b border-border">
@@ -273,8 +273,8 @@ export function AgentProfileDialog({ agentId, agentName, open, onOpenChange }: A
                                         key={lang.code}
                                         onClick={() => toggleArrayItem('languages', lang.code)}
                                         className={`px-2.5 py-1 text-[12px] rounded-md transition-colors ${localData.languages.includes(lang.code)
-                                                ? 'bg-primary/10 text-primary border border-primary/20'
-                                                : 'bg-muted text-muted-foreground hover:bg-muted/80'
+                                            ? 'bg-primary/10 text-primary border border-primary/20'
+                                            : 'bg-muted text-muted-foreground hover:bg-muted/80'
                                             }`}
                                     >
                                         {lang.name}
@@ -292,8 +292,8 @@ export function AgentProfileDialog({ agentId, agentName, open, onOpenChange }: A
                                         key={spec.id}
                                         onClick={() => toggleArrayItem('specializations', spec.id)}
                                         className={`px-2.5 py-1 text-[12px] rounded-md transition-colors ${localData.specializations.includes(spec.id)
-                                                ? 'bg-primary/10 text-primary border border-primary/20'
-                                                : 'bg-muted text-muted-foreground hover:bg-muted/80'
+                                            ? 'bg-primary/10 text-primary border border-primary/20'
+                                            : 'bg-muted text-muted-foreground hover:bg-muted/80'
                                             }`}
                                     >
                                         {spec.name}
@@ -311,8 +311,8 @@ export function AgentProfileDialog({ agentId, agentName, open, onOpenChange }: A
                                         key={seg.id}
                                         onClick={() => toggleArrayItem('target_segments', seg.id)}
                                         className={`px-2.5 py-1 text-[12px] rounded-md transition-colors ${localData.target_segments.includes(seg.id)
-                                                ? 'bg-primary/10 text-primary border border-primary/20'
-                                                : 'bg-muted text-muted-foreground hover:bg-muted/80'
+                                            ? 'bg-primary/10 text-primary border border-primary/20'
+                                            : 'bg-muted text-muted-foreground hover:bg-muted/80'
                                             }`}
                                     >
                                         {seg.name}
