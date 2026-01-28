@@ -132,8 +132,19 @@ Deno.serve(async (req) => {
         const openAiKey = Deno.env.get('OPENAI_API_KEY')
         if (!openAiKey) throw new Error('OPENAI_API_KEY validation failed')
 
+        // Fetch contact profile for language
+        const contactId = deal.contact?.id
+        let contactLang = 'English'
+        if (contactId) {
+            const { data: contactProfile } = await supabaseClient
+                .from('contact_profiles')
+                .select('language_primary')
+                .eq('contact_id', contactId)
+                .maybeSingle()
+            contactLang = contactProfile?.language_primary || 'English'
+        }
+
         const contactName = deal.contact?.first_name || 'Client'
-        const contactLang = deal.contact?.language || 'Russian' // explicit request for Russian usually implies Russian client, but let's default safe or use contact attribute
 
         const systemPrompt = `You are a luxury real estate assistant. Select exactly 5 properties for the client.
     Language: The client speaks ${contactLang}. Output the explanation in ${contactLang}.

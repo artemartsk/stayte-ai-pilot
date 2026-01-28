@@ -318,8 +318,16 @@ async function sendViaEmail(
             <div style="font-size: 14px; color: #374151; line-height: 1.6; margin-bottom: 12px;">
                 ${t.agentIntro(contact.first_name || '', selectionItems.length)}
             </div>
-            <div style="font-size: 13px; font-weight: 600; color: #1a1a1a;">${agentInfo.full_name || ''}</div>
-            <div style="font-size: 12px; color: #6b7280;">${t.yourAgent}${agentInfo.phone ? ` · ${agentInfo.phone}` : ''}</div>
+            <div style="display: flex; align-items: center; gap: 12px;">
+                ${agentInfo.avatar_url
+            ? `<img src="${agentInfo.avatar_url}" alt="${agentInfo.full_name}" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover;" />`
+            : `<div style="width: 48px; height: 48px; border-radius: 50%; background: ${primaryColor}; color: white; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 600;">${(agentInfo.full_name || 'A').charAt(0).toUpperCase()}</div>`
+        }
+                <div>
+                    <div style="font-size: 13px; font-weight: 600; color: #1a1a1a;">${agentInfo.full_name || ''}</div>
+                    <div style="font-size: 12px; color: #6b7280;">${t.yourAgent}${agentInfo.phone ? ` · ${agentInfo.phone}` : ''}</div>
+                </div>
+            </div>
         </div>` : ''
 
     const emailHtml = `
