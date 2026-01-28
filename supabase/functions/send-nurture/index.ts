@@ -33,11 +33,12 @@ Deno.serve(async (req) => {
         const {
             contact_id,
             agency_id,
+            batch_id,
             channel = 'email',  // 'email' or 'whatsapp'
             include_agent_intro = true
         } = await req.json()
 
-        console.log('send-nurture request:', { contact_id, agency_id, channel })
+        console.log('send-nurture request:', { contact_id, agency_id, batch_id, channel })
 
         if (!contact_id || !agency_id) {
             return new Response(JSON.stringify({ error: 'contact_id and agency_id required' }), {
@@ -81,33 +82,42 @@ Deno.serve(async (req) => {
         const clientLanguage = contactProfile?.language_primary || 'English'
         console.log(`Client language: ${clientLanguage}`)
 
-        // 2. Call generate-selection to create a selection batch
-        console.log(`Calling generate-selection for deal ${contact.current_deal_id}`)
+        // 2. Use provided batch_id or generate a new selection
+        let batchId: string
 
-        const selectionRes = await fetch(`${supabaseUrl}/functions/v1/generate-selection`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${serviceKey}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ deal_id: contact.current_deal_id })
-        })
+        if (batch_id) {
+            // Use existing selection
+            console.log(`Using existing selection batch: ${batch_id}`)
+            batchId = batch_id
+        } else {
+            // Generate new selection
+            console.log(`Generating new selection for deal ${contact.current_deal_id}`)
 
-        const selectionResult = await selectionRes.json()
-
-        if (!selectionRes.ok || !selectionResult.success) {
-            console.log('generate-selection failed or no properties:', selectionResult)
-            return new Response(JSON.stringify({
-                success: true,
-                message: selectionResult.message || 'No properties to send',
-                properties_sent: 0
-            }), {
-                headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+            const selectionRes = await fetch(`${supabaseUrl}/functions/v1/generate-selection`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${serviceKey}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ deal_id: contact.current_deal_id })
             })
-        }
 
-        const batchId = selectionResult.batch_id
-        console.log(`Selection batch created: ${batchId}`)
+            const selectionResult = await selectionRes.json()
+
+            if (!selectionRes.ok || !selectionResult.success) {
+                console.log('generate-selection failed or no properties:', selectionResult)
+                return new Response(JSON.stringify({
+                    success: true,
+                    message: selectionResult.message || 'No properties to send',
+                    properties_sent: 0
+                }), {
+                    headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+                })
+            }
+
+            batchId = selectionResult.batch_id
+            console.log(`Selection batch created: ${batchId}`)
+        }
 
         // 3. Fetch selection items with property snapshots
         const { data: selectionItems } = await supabase

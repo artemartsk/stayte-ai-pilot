@@ -12,7 +12,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   ArrowLeft, Mail, Phone, Building, User, Loader2, Calendar,
   MessageSquare, Eye, PhoneCall, Send, Clock, Sparkles, Briefcase, History,
-  Plus, MoreHorizontal, Bed, Bath, Maximize, MapPin, Play, Pause
+  Plus, MoreHorizontal, Bed, Bath, Maximize, MapPin, Play, Pause, Trash2
 } from 'lucide-react';
 import {
   Select,
@@ -921,6 +921,25 @@ const ContactDetail = () => {
                     >
                       <MessageSquare className="w-3.5 h-3.5" />
                       WhatsApp
+                    </button>
+                    <button
+                      onClick={async () => {
+                        if (!confirm('Delete this selection?')) return;
+                        const { error } = await supabase
+                          .from('selection_batches')
+                          .delete()
+                          .eq('id', selection.id);
+                        if (error) {
+                          toast.error(error.message);
+                        } else {
+                          toast.success('Selection deleted');
+                          queryClient.invalidateQueries({ queryKey: ['contact-selections', id] });
+                        }
+                      }}
+                      className="flex items-center gap-1.5 px-2 py-1.5 text-xs font-medium text-destructive hover:bg-destructive/10 rounded-md transition-colors"
+                      title="Delete selection"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
                     </button>
                   </div>
                 </div>
