@@ -895,12 +895,70 @@ async function executeCheckQualification(contact: any, supabase: any, config?: a
     if (!outputs.length) {
         return {
             qualified: true,
-            // routeTo: defaultOutput, // Remove specific route to allow generic traversal
             status: 'default',
             message: 'No outputs configured, routing via generic edge'
         }
     }
 
+    // AI-POWERED ROUTING (if enabled)
+    if (config?.use_ai !== false) {
+        try {
+            console.log('Using AI-powered routing')
+
+            // Extract group names for AI
+            const availableGroups = outputs
+                .filter((o: any) => o !== 'default' && o?.id !== 'default')
+                .map((o: any) => typeof o === 'string' ? o : o.name)
+
+            if (availableGroups.length > 0) {
+                const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? ''
+                const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+
+                const aiResponse = await fetch(`${supabaseUrl}/functions/v1/ai-route-contact`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${serviceKey}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        contact_id: contact.id,
+                        available_groups: availableGroups
+                    })
+                })
+
+                if (aiResponse.ok) {
+                    const aiResult = await aiResponse.json()
+
+                    if (aiResult.success && aiResult.group) {
+                        // Find matching output by name
+                        const matchedOutput = outputs.find((o: any) => {
+                            const name = typeof o === 'string' ? o : o.name
+                            return name.toLowerCase() === aiResult.group.toLowerCase()
+                        })
+
+                        const outputId = matchedOutput
+                            ? (typeof matchedOutput === 'string' ? matchedOutput : matchedOutput.id)
+                            : 'default'
+
+                        console.log(`AI routed to: ${aiResult.group} (${outputId}) with confidence ${aiResult.confidence}`)
+
+                        return {
+                            qualified: true,
+                            routeTo: outputId,
+                            status: outputId,
+                            message: `AI routed to ${aiResult.group}: ${aiResult.reason}`
+                        }
+                    }
+                } else {
+                    console.warn('AI routing failed, falling back to mechanical routing')
+                }
+            }
+        } catch (aiError) {
+            console.error('AI routing error, falling back to mechanical:', aiError)
+        }
+    }
+
+    // MECHANICAL ROUTING (fallback or if AI disabled)
     try {
         // Fetch contact's groups
         const { data: memberships, error } = await supabase
