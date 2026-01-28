@@ -875,42 +875,42 @@ const ContactDetail = () => {
                   <h3 className="text-sm font-semibold text-foreground/80">Selection {new Date(selection.created_at).toLocaleDateString()}</h3>
                   <Badge variant="secondary" className="text-[10px] h-5 px-2 font-normal bg-muted/60 text-muted-foreground">{selection.status}</Badge>
                   <div className="ml-auto flex items-center gap-2">
-                    {selection.status !== 'sent' && (
-                      <>
-                        <button
-                          onClick={() => {
-                            // Send via email
-                            fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-nurture`, {
-                              method: 'POST',
-                              headers: {
-                                'Content-Type': 'application/json',
-                                'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
-                              },
-                              body: JSON.stringify({ batch_id: selection.id, channel: 'email' })
-                            }).then(res => res.json()).then(data => {
-                              if (data.error) {
-                                toast.error(data.error);
-                              } else {
-                                toast.success('Selection sent via Email!');
-                                queryClient.invalidateQueries({ queryKey: ['contact-selections', id] });
-                              }
-                            }).catch(err => toast.error(err.message));
-                          }}
-                          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
-                        >
-                          <Mail className="w-3.5 h-3.5" />
-                          Send Email
-                        </button>
-                        <button
-                          disabled
-                          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-muted text-muted-foreground rounded-md cursor-not-allowed opacity-50"
-                          title="Coming soon"
-                        >
-                          <MessageSquare className="w-3.5 h-3.5" />
-                          WhatsApp
-                        </button>
-                      </>
-                    )}
+                    <button
+                      onClick={() => {
+                        fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-nurture`, {
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
+                          },
+                          body: JSON.stringify({
+                            batch_id: selection.id,
+                            contact_id: id,
+                            agency_id: contact?.agency_id,
+                            channel: 'email'
+                          })
+                        }).then(res => res.json()).then(data => {
+                          if (data.error) {
+                            toast.error(data.error);
+                          } else {
+                            toast.success('Selection sent via Email!');
+                            queryClient.invalidateQueries({ queryKey: ['contact-selections', id] });
+                          }
+                        }).catch(err => toast.error(err.message));
+                      }}
+                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+                    >
+                      <Mail className="w-3.5 h-3.5" />
+                      {selection.status === 'sent' ? 'Resend' : 'Send Email'}
+                    </button>
+                    <button
+                      disabled
+                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-muted text-muted-foreground rounded-md cursor-not-allowed opacity-50"
+                      title="Coming soon"
+                    >
+                      <MessageSquare className="w-3.5 h-3.5" />
+                      WhatsApp
+                    </button>
                   </div>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
